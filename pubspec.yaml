@@ -3,6 +3,7 @@ description: "A Flutter package that brings iOS-style context menu to Android."
 version: 0.0.1
 homepage: https://github.com/OmarShawkey13/ContextMenuAndroid
 repository: https://github.com/OmarShawkey13/ContextMenuAndroid
+issue_tracker: https://github.com/OmarShawkey13/ContextMenuAndroid/issues
 
 environment:
   sdk: ^3.8.1
