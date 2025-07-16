@@ -3,7 +3,7 @@
 A Flutter package that brings an iOS-style context menu to Android. This menu mimics the visual style and interaction behavior of iOS when a user long-presses on a card, image, or any widget.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/placeholder/ios-style-menu.gif" width="250" alt=""/>
+  <img src="assets/images/example.jpg" width="250" alt="iOS-style context menu on Android"/>
 </p>
 
 ## ✨ Features
