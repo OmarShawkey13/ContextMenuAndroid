@@ -1,5 +1,6 @@
+import 'package:context_menu_android/context_menu.dart';
+import 'package:context_menu_android/ios_style_context_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:context_menu_android/context_menu_android.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,21 +31,7 @@ class ContextMenuDemo extends StatelessWidget {
           onLongPress: () {
             showDialog(
               context: context,
-              builder: (ctx) => iOSStyleContextMenu(
-                ctx,
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  margin: const EdgeInsets.symmetric(horizontal: 24),
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    'Long press to open context menu',
-                    style: Theme.of(ctx).textTheme.bodyLarge,
-                  ),
-                ),
+              builder: (ctx) => IosStyleContextMenu(
                 actions: [
                   ContextMenuAndroid(
                     icon: Icons.share,
@@ -62,6 +49,19 @@ class ContextMenuDemo extends StatelessWidget {
                     onTap: () => debugPrint('Delete pressed'),
                   ),
                 ],
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Long press to open context menu',
+                    style: Theme.of(ctx).textTheme.bodyLarge,
+                  ),
+                ),
               ),
             );
           },
