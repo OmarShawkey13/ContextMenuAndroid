@@ -1,22 +1,39 @@
 # Changelog
 
+## [1.0.3] - 2025-07-18
+
+### 🎯 Enhancements
+
+#### 📏 Responsive Sizing Added
+- ✅ New `textSize` and `iconSize` properties allow for per-device scaling.
+- ✅ Sizes are automatically adjusted using `getResponsiveSize()` to match screen width for consistent appearance across devices.
+
+#### 🧠 Smarter Style Composition
+- ✨ Introduced `getTextStyle()` helper to merge user-defined `textStyle` with fallback logic and responsive sizing.
+- ✨ Introduced `getIconColor()` for consistent icon coloring logic (including automatic detection of delete actions).
+
+#### 🧾 Internal Improvements
+- 💬 Added inline documentation and bilingual comments (Arabic + English) for better clarity and future maintenance.
+- 📦 Padding is now responsive by default using `getResponsiveSize()` (e.g., horizontal padding `16 → getResponsiveSize(16)`).
+
+---
+
 ## [1.0.2] - 2025-07-17
 
 ### ✅ Fixes & Improvements
 
-- ✅ **Improved widget API**: `iOSStyleContextMenu` is now a stateless functional widget for cleaner syntax.
-- 🧱 **Switched to `AnimatedScale`** instead of `StatefulWidget` for smooth scaling transitions.
-- 🔁 **Optimized action builder** using `List.generate()` to reduce boilerplate.
-- 🎨 **Customization options added**:
-    - `backgroundColor`
-    - `dividerColor`
-    - `iconColor`
-    - `textStyle`
-    - `contentPadding`
-- 🗑 **Smart delete detection**: automatically highlights delete actions with red, bold text.
-- 🧪 **Test coverage**: Added unit tests with `flutter_test`.
-- 📚 Enhanced inline documentation and comments.
-- 🧩 Updated example app to reflect new customization features and API usage.
+- 🧼 **API Refactor**: `iOSStyleContextMenu` is now a stateless functional widget for cleaner syntax.
+- 🔁 **Smooth Transitions**: Replaced `StatefulWidget` with `AnimatedScale` for animation.
+- ⚙️ **Action Builder Optimization**: Utilized `List.generate()` to streamline context menu actions.
+- 🎨 **Customization Enhancements**:
+  - `backgroundColor`
+  - `dividerColor`
+  - `iconColor`
+  - `textStyle`
+  - `contentPadding`
+- 🗑 **Smart Delete Detection**: Automatically highlights delete actions with red, bold text.
+- 🧪 **Testing**: Added unit tests using `flutter_test`.
+- 📚 **Documentation**: Improved inline comments and updated the example app to reflect new features.
 
 ---
 
@@ -24,28 +41,28 @@
 
 🎉 Initial release of `ContextMenuAndroid` — an iOS-style context menu for Android built using Flutter.
 
-### ✨ Highlights
+### ✨ Features
 
-- iOS-style context menu with blurred background.
-- Customizable actions with support for icons, colors, and labels.
+- iOS-style blurred context menu.
+- Customizable actions with icons, labels, and colors.
+- Smart delete detection.
 - Dark mode support.
-- Delete actions are highlighted automatically.
-- Responsive and smooth UI animations.
-- Easily integratable with any widget.
+- Smooth and responsive UI animations.
+- Easily embeddable in any widget.
 
-### 🛠 Improvements
+### 🛠 Technical Improvements
 
-- Enabled full **null safety**.
-- Optimized widget trees using `const` constructors for better performance.
-- Enhanced **linter rules** in `analysis_options.yaml` to follow best practices.
-- Refactored code for readability and maintainability.
-- Added example image hosted via GitHub for consistent preview on pub.dev.
+- ✅ Enabled full **null safety**.
+- ✅ Optimized with `const` constructors for performance.
+- ✅ Enforced strong linter rules via `analysis_options.yaml`.
+- ✅ Refactored code for readability and reusability.
+- ✅ Included preview image hosted on GitHub for `pub.dev` display.
 
 ---
 
 ## [0.0.1] - 2025-07-16
 
-- 🎉 Initial draft release of `ContextMenuAndroid` package.
-- Added basic iOS-style blurred context menu.
-- Supports customizable actions (icon, label, onTap).
-- Initial design implementation with shadow and animation support.
+- 🧪 First draft release of `ContextMenuAndroid` package.
+- 🎨 Basic iOS-style blurred context menu implementation.
+- 🧩 Supports customizable icons, labels, and actions.
+- 🎬 Initial animation, shadow, and structure setup.

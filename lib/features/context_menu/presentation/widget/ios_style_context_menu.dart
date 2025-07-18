@@ -35,6 +35,8 @@ class IosStyleContextMenu extends StatefulWidget {
   final Color? dividerColor;
   final Color? iconColor;
   final EdgeInsetsGeometry? contentPadding;
+  final double? textSize;
+  final double? iconSize;
 
   const IosStyleContextMenu({
     super.key,
@@ -46,6 +48,8 @@ class IosStyleContextMenu extends StatefulWidget {
     this.dividerColor,
     this.iconColor,
     this.contentPadding,
+    this.textSize,
+    this.iconSize,
   });
 
   @override
@@ -111,6 +115,49 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     super.dispose();
   }
 
+  /// 🔧 تُستخدم لحساب حجم الخط النهائي بناءً على:
+  /// 1. textStyle المُرسل (إذا وُجد)
+  /// 2. وإذا لم يُرسل، يتم استخدام الحجم المخصص `textSize`
+  /// 3. يتم حساب الحجم النهائي بطريقة responsive بناءً على عرض الجهاز
+  TextStyle getTextStyle(BuildContext context, bool isDelete) {
+    // تحديد اللون الأساسي: إذا كان عنصر حذف → أحمر، وإلا يتم حسابه حسب الثيم أو textStyle الموجود
+    final baseColor = isDelete
+        ? Colors.red
+        : widget.textStyle?.color ??
+              (widget.isDark ?? false ? Colors.white : Colors.black);
+
+    // حساب الحجم المناسب للنص حسب عرض الجهاز باستخدام دالة responsive
+    final fontSize = getResponsiveSize(
+      context: context,
+      size: widget.textSize ?? 16,
+    );
+
+    // إرجاع TextStyle النهائي: إذا تم توفير textStyle → نستخدمه مع بعض التعديلات
+    // وإلا نُنشئ TextStyle جديد باستخدام اللون والحجم والوزن
+    return widget.textStyle?.copyWith(
+          color: baseColor,
+          fontSize: fontSize,
+          fontWeight: isDelete ? FontWeight.w500 : FontWeight.normal,
+        ) ??
+        TextStyle(
+          color: baseColor,
+          fontSize: fontSize,
+          fontWeight: isDelete ? FontWeight.w500 : FontWeight.normal,
+        );
+  }
+
+  /// Returns the appropriate icon color based on whether the action is a delete action or not.
+  ///
+  /// If [isDelete] is true, returns red to indicate a destructive action.
+  /// Otherwise, returns the user-defined [iconColor] if provided,
+  /// or defaults to black (for light theme) or white (for dark theme) depending on [isDark] mode.
+  Color getIconColor(bool isDelete) {
+    return isDelete
+        ? Colors.red
+        : widget.iconColor ??
+              (widget.isDark ?? false ? Colors.white : Colors.black);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -148,7 +195,12 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                   Padding(
                     padding:
                         widget.contentPadding ??
-                        const EdgeInsets.symmetric(horizontal: 16),
+                        EdgeInsets.symmetric(
+                          horizontal: getResponsiveSize(
+                            context: context,
+                            size: 16,
+                          ),
+                        ),
                     child: Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: Container(
@@ -175,7 +227,6 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                             final isDelete = action.label
                                 .toLowerCase()
                                 .contains('delete');
-
                             return FadeTransition(
                               opacity: actionAnimations[index],
                               child: SlideTransition(
@@ -202,9 +253,15 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                                             )
                                           : BorderRadius.zero,
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 20,
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: getResponsiveSize(
+                                            context: context,
+                                            size: 12,
+                                          ),
+                                          horizontal: getResponsiveSize(
+                                            context: context,
+                                            size: 20,
+                                          ),
                                         ),
                                         width: double.infinity,
                                         child: Row(
@@ -213,44 +270,14 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                                           children: [
                                             Text(
                                               action.label,
-                                              style:
-                                                  widget.textStyle?.copyWith(
-                                                    color: isDelete
-                                                        ? Colors.red
-                                                        : widget
-                                                                  .textStyle
-                                                                  ?.color ??
-                                                              (widget.isDark ??
-                                                                      false
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                        .black),
-                                                    fontWeight: isDelete
-                                                        ? FontWeight.w500
-                                                        : FontWeight.normal,
-                                                  ) ??
-                                                  TextStyle(
-                                                    fontSize: 16,
-                                                    color: isDelete
-                                                        ? Colors.red
-                                                        : (widget.isDark ??
-                                                                  false
-                                                              ? Colors.white
-                                                              : Colors.black),
-                                                    fontWeight: isDelete
-                                                        ? FontWeight.w500
-                                                        : FontWeight.normal,
-                                                  ),
+                                              style: getTextStyle(
+                                                context,
+                                                isDelete,
+                                              ),
                                             ),
                                             Icon(
                                               action.icon,
-                                              color: isDelete
-                                                  ? Colors.red
-                                                  : widget.iconColor ??
-                                                        (widget.isDark ?? false
-                                                            ? Colors.white
-                                                            : Colors.black),
-                                              size: 20,
+                                              color: getIconColor(isDelete),
                                             ),
                                           ],
                                         ),
