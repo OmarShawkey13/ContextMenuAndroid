@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:context_menu_android/context_menu.dart';
+import 'package:context_menu_android/features/context_menu/data/models/context_menu.dart';
 import 'package:flutter/material.dart';
 
 /// A customizable iOS-style context menu for Android (using a blur background and smooth animations).
@@ -136,7 +136,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                     scale: Tween<double>(begin: 0.8, end: 1.0).animate(
                       CurvedAnimation(
                         parent: childController,
-                        curve: Curves.easeOutBack,
+                        curve: Curves.easeInExpo,
                       ),
                     ),
                     child: FadeTransition(
