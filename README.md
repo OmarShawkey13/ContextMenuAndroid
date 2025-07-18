@@ -72,14 +72,14 @@ IosStyleContextMenu(
 
 ## 📦 Customization Options
 
-| Property        | Description                                 |
-|----------------|---------------------------------------------|
-| `actions`       | List of actions with icons and labels.      |
-| `backgroundColor` | Custom background color for the menu.     |
-| `iconColor`     | Color for icons (auto detects red for delete). |
-| `textStyle`     | Custom text style for action labels.        |
-| `contentPadding` | Padding inside the action buttons.         |
-| `blurStrength`  | Control blur level (if enabled).            |
+| Property          | Description                                    |
+|-------------------|------------------------------------------------|
+| `actions`         | List of actions with icons and labels.         |
+| `backgroundColor` | Custom background color for the menu.          |
+| `iconColor`       | Color for icons (auto detects red for delete). |
+| `textStyle`       | Custom text style for action labels.           |
+| `contentPadding`  | Padding inside the action buttons.             |
+| `blurStrength`    | Control blur level (if enabled).               |
 
 ---
 
