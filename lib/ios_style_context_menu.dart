@@ -146,7 +146,9 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                   ),
                   const SizedBox(height: 12),
                   Padding(
-                    padding: widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16),
+                    padding:
+                        widget.contentPadding ??
+                        const EdgeInsets.symmetric(horizontal: 16),
                     child: Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: Container(
@@ -166,9 +168,13 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: List.generate(widget.actions.length, (index) {
+                          children: List.generate(widget.actions.length, (
+                            index,
+                          ) {
                             final action = widget.actions[index];
-                            final isDelete = action.label.toLowerCase().contains('delete');
+                            final isDelete = action.label
+                                .toLowerCase()
+                                .contains('delete');
 
                             return FadeTransition(
                               opacity: actionAnimations[index],
@@ -187,31 +193,53 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                                         action.onTap();
                                       },
                                       borderRadius: index == 0
-                                          ? const BorderRadius.vertical(top: Radius.circular(16))
+                                          ? const BorderRadius.vertical(
+                                              top: Radius.circular(16),
+                                            )
                                           : index == widget.actions.length - 1
-                                          ? const BorderRadius.vertical(bottom: Radius.circular(16))
+                                          ? const BorderRadius.vertical(
+                                              bottom: Radius.circular(16),
+                                            )
                                           : BorderRadius.zero,
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 20,
+                                        ),
                                         width: double.infinity,
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               action.label,
-                                              style: widget.textStyle?.copyWith(
-                                                color: isDelete
-                                                    ? Colors.red
-                                                    : widget.textStyle?.color ??
-                                                    (widget.isDark ?? false ? Colors.white : Colors.black),
-                                                fontWeight: isDelete ? FontWeight.w500 : FontWeight.normal,
-                                              ) ??
+                                              style:
+                                                  widget.textStyle?.copyWith(
+                                                    color: isDelete
+                                                        ? Colors.red
+                                                        : widget
+                                                                  .textStyle
+                                                                  ?.color ??
+                                                              (widget.isDark ??
+                                                                      false
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                        .black),
+                                                    fontWeight: isDelete
+                                                        ? FontWeight.w500
+                                                        : FontWeight.normal,
+                                                  ) ??
                                                   TextStyle(
                                                     fontSize: 16,
                                                     color: isDelete
                                                         ? Colors.red
-                                                        : (widget.isDark ?? false ? Colors.white : Colors.black),
-                                                    fontWeight: isDelete ? FontWeight.w500 : FontWeight.normal,
+                                                        : (widget.isDark ??
+                                                                  false
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                                    fontWeight: isDelete
+                                                        ? FontWeight.w500
+                                                        : FontWeight.normal,
                                                   ),
                                             ),
                                             Icon(
@@ -219,7 +247,9 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                                               color: isDelete
                                                   ? Colors.red
                                                   : widget.iconColor ??
-                                                  (widget.isDark ?? false ? Colors.white : Colors.black),
+                                                        (widget.isDark ?? false
+                                                            ? Colors.white
+                                                            : Colors.black),
                                               size: 20,
                                             ),
                                           ],
@@ -229,8 +259,11 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                                     if (index != widget.actions.length - 1)
                                       Divider(
                                         height: 1,
-                                        color: widget.dividerColor ??
-                                            (widget.isDark ?? false ? Colors.white12 : Colors.grey[300]),
+                                        color:
+                                            widget.dividerColor ??
+                                            (widget.isDark ?? false
+                                                ? Colors.white12
+                                                : Colors.grey[300]),
                                       ),
                                   ],
                                 ),

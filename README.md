@@ -25,4 +25,4 @@ To start using this package, add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  ios_style_context_menu: ^1.0.1
+  ios_style_context_menu: ^1.0.2

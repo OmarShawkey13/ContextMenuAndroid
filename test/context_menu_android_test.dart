@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:context_menu_android/ios_style_context_menu.dart';
 
 void main() {
-  testWidgets('Context menu renders child correctly', (WidgetTester tester) async {
+  testWidgets('Context menu renders child correctly', (
+    WidgetTester tester,
+  ) async {
     final testKey = const Key('my_test_widget');
 
     await tester.pumpWidget(

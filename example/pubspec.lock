@@ -44,10 +44,11 @@ packages:
   context_menu_android:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
-    version: "1.0.1"
+      name: context_menu_android
+      sha256: "9a87ab914062e331d707de7cc287cf78a5de5801feabb5f11046b1461ececaf0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   cupertino_icons:
     dependency: "direct main"
     description:
