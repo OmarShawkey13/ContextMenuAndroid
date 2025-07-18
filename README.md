@@ -72,14 +72,18 @@ IosStyleContextMenu(
 
 ## 📦 Customization Options
 
-| Property          | Description                                    |
-|-------------------|------------------------------------------------|
-| `actions`         | List of actions with icons and labels.         |
-| `backgroundColor` | Custom background color for the menu.          |
-| `iconColor`       | Color for icons (auto detects red for delete). |
-| `textStyle`       | Custom text style for action labels.           |
-| `contentPadding`  | Padding inside the action buttons.             |
-| `blurStrength`    | Control blur level (if enabled).               |
+| Property          | Type                     | Description                                                                               |
+|-------------------|--------------------------|-------------------------------------------------------------------------------------------|
+| `child`           | Widget                   | **Required.** The widget that triggers the context menu (e.g. image, card, etc.).         |
+| `actions`         | List<ContextMenuAndroid> | **Required.** List of context menu actions with icon, label, and onTap callback.          |
+| `isDark`          | bool?                    | Optional. Force dark mode (overrides theme). If null, uses system theme.                  |
+| `textStyle`       | TextStyle?               | Optional. Custom style for action text (color, font, weight). Supports fallback logic.    |
+| `backgroundColor` | Color?                   | Optional. Background color of the menu container (defaults based on theme with opacity).  |
+| `dividerColor`    | Color?                   | Optional. Color of dividers between actions (defaults to light gray or white12).          |
+| `iconColor`       | Color?                   | Optional. Default icon color for all actions (auto turns red for destructive actions).    |
+| `contentPadding`  | EdgeInsetsGeometry?      | Optional. Padding for the menu container (defaults to symmetric horizontal padding).      |
+| `textSize`        | double?                  | Optional. Text size for menu items. Uses `getResponsiveSize()` to scale with screen size. |
+| `iconSize`        | double?                  | Optional. Icon size for action icons (currently unused in default widget layout).         |
 
 ---
 
