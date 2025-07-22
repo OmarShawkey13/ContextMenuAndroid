@@ -100,7 +100,8 @@ class ContextMenuDemo extends StatelessWidget {
                       ContextMenuAndroid(
                         icon: Icons.arrow_forward_ios,
                         label: 'More',
-                        subMenu: [ // ✅ Submenu هنا
+                        subMenu: [
+                          // ✅ Submenu هنا
                           ContextMenuAndroid(
                             icon: Icons.copy,
                             label: 'Copy',
@@ -141,10 +142,10 @@ class ContextMenuDemo extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
-            )
+            ),
           ],
         ),
-      )
+      ),
     );
   }
 }
