@@ -12,12 +12,18 @@ class ContextMenuAndroid {
   final String label;
 
   /// The function that is executed when the action is tapped.
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  /// Creates a [ContextMenuAndroid] item with [icon], [label], and [onTap] callback.
+  /// An optional list of sub-menu items.
+  final List<ContextMenuAndroid>? subMenu;
+
+  /// Creates a [ContextMenuAndroid] item with [icon], [label], and [onTap] callback, and optional [subMenu].
   ContextMenuAndroid({
     required this.icon,
     required this.label,
-    required this.onTap,
+    this.onTap,
+    this.subMenu,
   });
+
+  bool get hasSubMenu => subMenu != null && subMenu!.isNotEmpty;
 }

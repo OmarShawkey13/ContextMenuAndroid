@@ -62,6 +62,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   late Animation<double> childOpacity;
   late AnimationController menuController;
   late List<Animation<double>> actionAnimations;
+  late List<List<ContextMenuAndroid>> menuStack;
 
   @override
   void initState() {
@@ -69,6 +70,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     initChildAnimation();
     initMenuAnimation();
     startAnimations();
+    menuStack = [widget.actions];
   }
 
   /// Initializes the animation for the main child widget (scaling and fading).
@@ -113,6 +115,27 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     childController.dispose();
     menuController.dispose();
     super.dispose();
+  }
+
+
+  /// Opens a sub-menu by adding it to the menu stack and starting animations.
+  void openSubMenu(List<ContextMenuAndroid> subMenu) {
+    setState(() {
+      menuStack.add(subMenu); // ✅ إدخال القائمة الفرعية
+      initMenuAnimation();    // ✅ إعادة بناء الأنيميشن
+      menuController.forward(from: 0);
+    });
+  }
+
+  /// Closes the current sub-menu by removing it from the menu stack and starting animations.
+  void closeSubMenu() {
+    if (menuStack.length > 1) {
+      setState(() {
+        menuStack.removeLast(); // ✅ الرجوع للخلف
+        initMenuAnimation();
+        menuController.forward(from: 0);
+      });
+    }
   }
 
   /// 🔧 تُستخدم لحساب حجم الخط النهائي بناءً على:
@@ -160,6 +183,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
 
   @override
   Widget build(BuildContext context) {
+    final currentMenu = menuStack.last;
     return GestureDetector(
       onTap: () => Navigator.pop(context),
       child: Dialog(
@@ -220,83 +244,92 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: List.generate(widget.actions.length, (
-                            index,
-                          ) {
-                            final action = widget.actions[index];
-                            final isDelete = action.label
-                                .toLowerCase()
-                                .contains('delete');
-                            return FadeTransition(
-                              opacity: actionAnimations[index],
-                              child: SlideTransition(
-                                position: actionAnimations[index].drive(
-                                  Tween<Offset>(
-                                    begin: const Offset(0, 0.1),
-                                    end: Offset.zero,
+                          children: [
+                            if (menuStack.length > 1)
+                              ListTile(
+                                leading: const Icon(Icons.arrow_back_ios_new_outlined),
+                                title: const Text("Back"),
+                                onTap: closeSubMenu,
+                              ),
+                            ...List.generate(currentMenu.length, (index) {
+                              final action = currentMenu[index];
+                              final isDelete =
+                              action.label.toLowerCase().contains('delete');
+                              return FadeTransition(
+                                opacity: actionAnimations[index],
+                                child: SlideTransition(
+                                  position: actionAnimations[index].drive(
+                                    Tween<Offset>(
+                                      begin: const Offset(0, 0.1),
+                                      end: Offset.zero,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (action.hasSubMenu) {
+                                            openSubMenu(action.subMenu!);
+                                          } else {
+                                            Navigator.pop(context);
+                                            action.onTap?.call();
+                                          }
+                                        },
+                                        borderRadius: index == 0
+                                            ? const BorderRadius.vertical(
+                                          top: Radius.circular(16),
+                                        )
+                                            : index == currentMenu.length - 1
+                                            ? const BorderRadius.vertical(
+                                          bottom:
+                                          Radius.circular(16),
+                                        )
+                                            : BorderRadius.zero,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: getResponsiveSize(
+                                              context: context,
+                                              size: 12,
+                                            ),
+                                            horizontal: getResponsiveSize(
+                                              context: context,
+                                              size: 20,
+                                            ),
+                                          ),
+                                          width: double.infinity,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Text(
+                                                action.label,
+                                                style: getTextStyle(
+                                                    context, isDelete),
+                                              ),
+                                              Icon(
+                                                action.icon,
+                                                color:
+                                                getIconColor(isDelete),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      if (index != currentMenu.length - 1)
+                                        Divider(
+                                          height: 1,
+                                          color: widget.dividerColor ??
+                                              (widget.isDark ?? false
+                                                  ? Colors.white12
+                                                  : Colors.grey[300]),
+                                        ),
+                                    ],
                                   ),
                                 ),
-                                child: Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        action.onTap();
-                                      },
-                                      borderRadius: index == 0
-                                          ? const BorderRadius.vertical(
-                                              top: Radius.circular(16),
-                                            )
-                                          : index == widget.actions.length - 1
-                                          ? const BorderRadius.vertical(
-                                              bottom: Radius.circular(16),
-                                            )
-                                          : BorderRadius.zero,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: getResponsiveSize(
-                                            context: context,
-                                            size: 12,
-                                          ),
-                                          horizontal: getResponsiveSize(
-                                            context: context,
-                                            size: 20,
-                                          ),
-                                        ),
-                                        width: double.infinity,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              action.label,
-                                              style: getTextStyle(
-                                                context,
-                                                isDelete,
-                                              ),
-                                            ),
-                                            Icon(
-                                              action.icon,
-                                              color: getIconColor(isDelete),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    if (index != widget.actions.length - 1)
-                                      Divider(
-                                        height: 1,
-                                        color:
-                                            widget.dividerColor ??
-                                            (widget.isDark ?? false
-                                                ? Colors.white12
-                                                : Colors.grey[300]),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
+                              );
+                            })
+                          ],
                         ),
                       ),
                     ),

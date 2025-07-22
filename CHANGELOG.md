@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.4] - 2025-07-22
+
+### 🆕 Features
+
+#### 🍔 SubMenu Support
+- ✅ Added support for nested `subMenu` items in context menu.
+- 📱 Submenus open with **iOS-style sliding animation**.
+- 🔙 Includes automatic "Back" button and navigation stack handling.
+- 🎯 Fully animated using `AnimatedSwitcher` with slide transitions.
+- 📦 Seamless integration with existing `ContextMenuAndroid` actions.
+
+---
+
 ## [1.0.3] - 2025-07-18
 
 ### 🎯 Enhancements

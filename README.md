@@ -27,7 +27,7 @@ Add the package to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  ios_style_context_menu: ^1.0.3
+  ios_style_context_menu: ^1.0.4
 ```
 
 Then run:
