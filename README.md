@@ -1,33 +1,35 @@
 # 🍎 ios_style_context_menu
 
-A Flutter package that brings a beautiful **iOS-style context menu** to **Android**.  
-This menu replicates the iOS long-press interaction behavior and style, allowing users to interact with widgets such as cards, images, or any custom component through a smooth, native-like pop-up menu.
+A **Flutter package** that brings the elegant **iOS-style context menu** experience to **Android** — complete with blur effects, fluid animations, and nested sub-menus.  
+Perfect for creating beautiful **long-press menus** on any widget, such as cards, images, or list items — all with the finesse of Apple design.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/OmarShawkey13/ContextMenuAndroid/main/assets/images/example.jpg" width="250" alt="iOS-style context menu on Android"/>
+  <img src="https://raw.githubusercontent.com/OmarShawkey13/ContextMenuAndroid/main/assets/images/example.jpg" width="270" alt="iOS-style context menu on Android"/>
 </p>
 
 ---
 
-## ✨ Features
+## ✨ Why ios_style_context_menu?
 
-- 🍏 **iOS-style interaction** – Mimics the native long-press menu behavior on iOS.
-- 🧰 **Custom actions** – Add any number of actions like *Share*, *Copy*, *Delete*, etc.
-- 💫 **Smooth animations** – Uses `AnimatedScale` and `BackdropFilter` for seamless transitions.
-- 🪞 **Blurred background** – Optional `BackdropFilter` for a true iOS effect.
-- 🌒 **Dark mode ready** – Automatically adapts to light/dark themes.
-- 🧩 **Fully customizable** – Control icon, text, colors, padding, and more.
-- 🧠 **Smart delete detection** – Automatically highlights delete items in red.
+| Feature                       | Description                                                                         |
+|-------------------------------|-------------------------------------------------------------------------------------|
+| 🍏 **True iOS Feel**          | Replicates iOS’s smooth context menu interaction, animations, and visual hierarchy. |
+| 🧩 **Fully Customizable**     | Adjust text, icons, colors, padding, and animation curves — effortlessly.           |
+| 💫 **Smooth Transitions**     | Powered by Flutter animations and `BackdropFilter` for silky blur effects.          |
+| 🪄 **Nested Menus Support**   | Easily create sub-menus with back navigation — ideal for complex actions.           |
+| 🌗 **Dark & Light Themes**    | Automatically adapts to the system theme or use `isDark` to override.               |
+| 🧠 **Smart Delete Detection** | Destructive actions (like “Delete”) are automatically highlighted in red.           |
+| ⚙️ **Performance-Optimized**  | Uses efficient animation controllers and responsive sizing for any screen.          |
 
 ---
 
 ## 🚀 Getting Started
 
-Add the package to your `pubspec.yaml` file:
+Add to your project:
 
 ```yaml
 dependencies:
-  ios_style_context_menu: ^1.0.4
+  ios_style_context_menu: ^1.0.5
 ```
 
 Then run:
@@ -36,64 +38,150 @@ Then run:
 flutter pub get
 ```
 
+Import it in your code:
+
+```dart
+import 'package:ios_style_context_menu/ios_style_context_menu.dart';
+```
+
 ---
 
-## 🛠 Usage
+## 🧠 Basic Usage
 
-Wrap any widget you want with `IosStyleContextMenu`:
+Wrap any widget with `IosStyleContextMenu` and pass a list of actions:
 
 ```dart
 IosStyleContextMenu(
+  child: Image.network('https://picsum.photos/200'),
   actions: [
-    ContextMenuAction(
+    ContextMenuAndroid(
       icon: Icons.share,
       label: 'Share',
-      onPressed: () => print('Share tapped'),
+      onTap: () => print('Shared!'),
     ),
-    ContextMenuAction(
+    ContextMenuAndroid(
+      icon: Icons.favorite,
+      label: 'Add to Favorites',
+      onTap: () => print('Added to favorites!'),
+    ),
+    ContextMenuAndroid(
       icon: Icons.delete,
       label: 'Delete',
-      onPressed: () => print('Delete tapped'),
+      onTap: () => print('Deleted!'),
     ),
   ],
-  child: YourWidgetHere(),
 );
 ```
 
 ---
 
-## 📸 Preview
+## 🌿 Advanced Example with Sub-Menus
+
+```dart
+IosStyleContextMenu(
+  child: Card(
+    elevation: 6,
+    child: ListTile(
+      leading: Icon(Icons.movie),
+      title: Text('Inception'),
+      subtitle: Text('Tap & hold for menu'),
+    ),
+  ),
+  actions: [
+    ContextMenuAndroid(
+      icon: Icons.play_arrow,
+      label: 'Play',
+      onTap: () => print('Playing Inception...'),
+    ),
+    ContextMenuAndroid(
+      icon: Icons.more_horiz,
+      label: 'More',
+      subMenu: [
+        ContextMenuAndroid(
+          icon: Icons.info_outline,
+          label: 'Details',
+          onTap: () => print('Opening details...'),
+        ),
+        ContextMenuAndroid(
+          icon: Icons.download,
+          label: 'Download',
+          onTap: () => print('Downloading...'),
+        ),
+      ],
+    ),
+  ],
+);
+```
+
+---
+
+## ⚙️ Customization Options
+
+| Property          | Type                       | Description                                                                |
+|-------------------|----------------------------|----------------------------------------------------------------------------|
+| `child`           | `Widget`                   | **Required.** The widget that triggers the context menu.                   |
+| `actions`         | `List<ContextMenuAndroid>` | **Required.** A list of action items, each with icon, label, and callback. |
+| `isDark`          | `bool?`                    | Forces dark mode (if not set, it follows system theme).                    |
+| `textStyle`       | `TextStyle?`               | Custom text style for action labels.                                       |
+| `backgroundColor` | `Color?`                   | Background color of the menu container (defaults based on theme).          |
+| `dividerColor`    | `Color?`                   | Divider color between menu items.                                          |
+| `iconColor`       | `Color?`                   | Icon color (automatically turns red for “Delete” actions).                 |
+| `contentPadding`  | `EdgeInsetsGeometry?`      | Padding around the menu container.                                         |
+| `textSize`        | `double?`                  | Font size for text, scales responsively.                                   |
+| `iconSize`        | `double?`                  | Optional icon size (currently unused by default).                          |
+
+---
+
+## 📸 Live Preview
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/OmarShawkey13/ContextMenuAndroid/main/assets/images/preview.gif" width="300"/>
+  <img src="https://raw.githubusercontent.com/OmarShawkey13/ContextMenuAndroid/main/assets/images/preview.gif" width="300" alt="Animated iOS-style context menu preview"/>
 </p>
 
 ---
 
-## 📦 Customization Options
+## 🧱 Architecture Overview
 
-| Property          | Type                     | Description                                                                               |
-|-------------------|--------------------------|-------------------------------------------------------------------------------------------|
-| `child`           | Widget                   | **Required.** The widget that triggers the context menu (e.g. image, card, etc.).         |
-| `actions`         | List<ContextMenuAndroid> | **Required.** List of context menu actions with icon, label, and onTap callback.          |
-| `isDark`          | bool?                    | Optional. Force dark mode (overrides theme). If null, uses system theme.                  |
-| `textStyle`       | TextStyle?               | Optional. Custom style for action text (color, font, weight). Supports fallback logic.    |
-| `backgroundColor` | Color?                   | Optional. Background color of the menu container (defaults based on theme with opacity).  |
-| `dividerColor`    | Color?                   | Optional. Color of dividers between actions (defaults to light gray or white12).          |
-| `iconColor`       | Color?                   | Optional. Default icon color for all actions (auto turns red for destructive actions).    |
-| `contentPadding`  | EdgeInsetsGeometry?      | Optional. Padding for the menu container (defaults to symmetric horizontal padding).      |
-| `textSize`        | double?                  | Optional. Text size for menu items. Uses `getResponsiveSize()` to scale with screen size. |
-| `iconSize`        | double?                  | Optional. Icon size for action icons (currently unused in default widget layout).         |
+```
+lib/
+├── ios_style_context_menu.dart    # Core widget and animations
+├── context_menu.dart              # Data model for menu actions
+└── src/
+    ├── animations/
+    ├── widgets/
+    └── utils/
+```
+
+---
+
+## 💡 Pro Tips
+
+- ✅ Use `Navigator.pop(context)` manually only if you wrap custom dialogs inside.
+- 🔁 You can open nested sub-menus dynamically using `subMenu` property.
+- 🎨 Combine with `Theme.of(context)` for adaptive color matching.
+- 🕹 Long-press gesture wrappers can be added for auto-open menus.
+
+---
+
+## 🧰 Planned Add-ons (v2.0)
+
+- ✨ Built-in **long-press wrapper** (`IosContextMenuWrapper`).
+- 🔊 **Haptic feedback** for tap and open events.
+- 🎬 Custom **animation styles** (fade, slide, scale).
+- 🧩 Public **theme configuration class** (`ContextMenuThemeData`).
 
 ---
 
 ## 📄 License
 
-MIT License – see [LICENSE](https://github.com/OmarShawkey13/ContextMenuAndroid/blob/main/LICENSE) file for details.
+This project is licensed under the [MIT License](https://github.com/OmarShawkey13/ContextMenuAndroid/blob/main/LICENSE).  
+You’re free to use, modify, and distribute it with proper attribution.
 
 ---
 
-## ❤️ Author
+## ❤️ Credits
 
-Developed by [Omar Shawkey](https://github.com/OmarShawkey13)  
-Feel free to contribute, open issues, or suggest features!
+Developed and maintained with 💙 by  
+**[Omar Shawkey](https://github.com/OmarShawkey13)**
+
+> _"Design like Apple. Animate like Flutter."_ 🍏

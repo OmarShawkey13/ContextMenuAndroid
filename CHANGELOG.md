@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.0.5] - 2025-11-05
+
+### 🚀 Major Improvements
+
+#### 🧩 Animation & Performance Enhancements
+- ⚙️ **Optimized animation lifecycle** — old `AnimationController` instances are now properly disposed to prevent memory leaks.
+- 🕒 Adjusted animation duration dynamically (`min(600, 80 * length)`) for smoother scaling on long action lists.
+- 🔁 Added **reverse closing animation** when dismissing the menu for a more natural experience.
+- 🧠 Improved animation sequencing between `childController` and `menuController` for iOS-like smooth transitions.
+
+#### 🧭 Submenu UX Improvements
+- ➕ Added **visual arrow indicator (`chevron_right`)** for items that contain submenus.
+- 🔙 Enhanced back-navigation with animated slide transitions and proper stack restoration.
+
+#### 🎨 UI / Layout Refinements
+- 🪟 Added **SafeArea** to protect against notch and gesture areas.
+- 🧱 Wrapped long menus in `SingleChildScrollView` with `Flexible` to prevent overflow on small devices.
+- 💡 Improved background blur with a subtle dark overlay (`Colors.black.withOpacity(0.15)`) for better contrast.
+- ⚖️ Refined menu width and padding using responsive scaling.
+
+#### 🧮 Responsive Design Enhancements
+- 📏 Improved `getResponsiveSize()` — now clamps width between `320.0` and `600.0` for better tablet support.
+- 📱 Ensures consistent sizing across all devices, maintaining proportional text and padding.
+
+#### 🧰 Codebase Cleanup & Reliability
+- ✅ Added defensive checks for mounted state before popping navigation.
+- 🧼 Refactored logic to make the widget **production-stable** for large projects.
+- 📄 Preserved all inline documentation and bilingual comments for clarity.
+
+---
+
 ## [1.0.4] - 2025-07-22
 
 ### 🆕 Features
