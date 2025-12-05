@@ -1,5 +1,44 @@
 # Changelog
 
+## [1.0.6] - 2025-12-05
+
+### 🛠 Bug fixes & Quality Improvements
+
+- 🐛 **Fixed** layout overflow in nested submenus when used inside constrained parents (e.g., `Row`/`Column`) by improving parent-data checks and enforcing proper `Flexible` placement.
+- 🧩 **Resolved** animation stutter caused by simultaneous `childController` / `menuController` conflicts — added improved sequencing and cancellation logic.
+- ✅ **Guarded** navigation pops with extra `mounted` checks to prevent exceptions when widget tree is being disposed.
+- 🔒 **Stabilized** internal state updates to avoid duplicate callbacks on fast successive taps.
+
+### ✨ New Features
+
+- 🔀 **New parameter: `menuAlignment`**
+    - Adds flexible control over menu alignment and opening direction (e.g., `left`, `right`, `center`, `start`, `end`).
+    - Works with screen-edge detection to flip direction automatically when needed.
+    - Example: `ContextMenuAndroid(menuAlignment: MenuAlignment.right)` to force right alignment.
+
+### 🚀 UX & Animation
+
+- 🎞 Improved close animation timing to better match opening velocity (smoother reverse transitions).
+- ↔️ Enhanced submenu slide transitions to better respect `menuAlignment` and RTL layouts.
+- ✨ Slightly increased backdrop blur radius with adaptive opacity for clearer readability in bright/dark backgrounds.
+
+### 🧭 API & Developer Experience
+
+- 🎯 Updated minimum Dart SDK requirement to **^3.10.1** for improved performance, language features, and compatibility.
+
+
+- 🧰 Added `MenuAlignment` enum to public API with clear docs and examples.
+- 🧾 Updated example app showing `menuAlignment` usage and RTL support example.
+- 🧪 Added additional unit tests around submenu stack restoration and alignment flipping.
+
+### 🧹 Code Maintenance
+
+- 🔁 Refactored `getResponsiveSize()` to centralize min/max clamps for consistent behavior across versions.
+- 🧼 Removed deprecated internal helpers and improved doc comments (Arabic + English).
+- 📦 Minor dependency bumps and lint fixes.
+
+---
+
 ## [1.0.5] - 2025-11-05
 
 ### 🚀 Major Improvements

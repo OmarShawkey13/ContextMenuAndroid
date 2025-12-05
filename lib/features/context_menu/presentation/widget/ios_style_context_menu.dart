@@ -35,6 +35,7 @@ class IosStyleContextMenu extends StatefulWidget {
   final Color? backgroundColor;
   final Color? dividerColor;
   final Color? iconColor;
+  final AlignmentGeometry? menuAlignment;
   final EdgeInsetsGeometry? contentPadding;
   final double? textSize;
   final double? iconSize;
@@ -48,6 +49,7 @@ class IosStyleContextMenu extends StatefulWidget {
     this.backgroundColor,
     this.dividerColor,
     this.iconColor,
+    this.menuAlignment,
     this.contentPadding,
     this.textSize,
     this.iconSize,
@@ -187,7 +189,6 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
 
     return GestureDetector(
       onTap: () async {
-        // ✅ Smooth reverse animation when closing
         await menuController.reverse();
         await childController.reverse();
         if (context.mounted) Navigator.pop(context);
@@ -198,177 +199,173 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // ✅ Improved blur background with light overlay
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(color: Colors.black.withValues(alpha: 0.15)),
             ),
-            GestureDetector(
-              onTap: () {}, // Prevent closing on inner tap
-              child: SafeArea(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Animated child (e.g., image or card)
-                    ScaleTransition(
-                      scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                        CurvedAnimation(
-                          parent: childController,
-                          curve: Curves.easeInExpo,
-                        ),
-                      ),
-                      child: FadeTransition(
-                        opacity: childOpacity,
-                        child: widget.child,
+            SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ScaleTransition(
+                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: childController,
+                        curve: Curves.easeInExpo,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding:
-                          widget.contentPadding ??
-                          EdgeInsets.symmetric(
-                            horizontal: getResponsiveSize(
-                              context: context,
-                              size: 16,
+                    child: FadeTransition(
+                      opacity: childOpacity,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.8,
+                          maxHeight: MediaQuery.of(context).size.height * 0.4,
+                        ),
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: widget.child,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding:
+                        widget.contentPadding ??
+                        EdgeInsets.symmetric(
+                          horizontal: getResponsiveSize(
+                            context: context,
+                            size: 16,
+                          ),
+                        ),
+                    child: Align(
+                      alignment: widget.menuAlignment ?? Alignment.center,
+                      child: Container(
+                        width: getResponsiveSize(context: context, size: 280),
+                        decoration: BoxDecoration(
+                          color: widget.isDark ?? false
+                              ? Colors.black.withValues(alpha: 0.9)
+                              : Colors.white.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
                             ),
-                          ),
-                      child: Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Container(
-                          width: getResponsiveSize(context: context, size: 280),
-                          decoration: BoxDecoration(
-                            color: widget.isDark ?? false
-                                ? Colors.black.withValues(alpha: 0.9)
-                                : Colors.white.withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Flexible(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (menuStack.length > 1)
-                                    ListTile(
-                                      leading: const Icon(
-                                        Icons.arrow_back_ios_new_outlined,
+                          ],
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (menuStack.length > 1)
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.arrow_back_ios_new_outlined,
+                                  ),
+                                  title: const Text("Back"),
+                                  onTap: closeSubMenu,
+                                ),
+                              ...List.generate(currentMenu.length, (index) {
+                                final action = currentMenu[index];
+                                final isDelete = action.label
+                                    .toLowerCase()
+                                    .contains('delete');
+                                return FadeTransition(
+                                  opacity: actionAnimations[index],
+                                  child: SlideTransition(
+                                    position: actionAnimations[index].drive(
+                                      Tween<Offset>(
+                                        begin: const Offset(0, 0.1),
+                                        end: Offset.zero,
                                       ),
-                                      title: const Text("Back"),
-                                      onTap: closeSubMenu,
                                     ),
-                                  ...List.generate(currentMenu.length, (index) {
-                                    final action = currentMenu[index];
-                                    final isDelete = action.label
-                                        .toLowerCase()
-                                        .contains('delete');
-
-                                    return FadeTransition(
-                                      opacity: actionAnimations[index],
-                                      child: SlideTransition(
-                                        position: actionAnimations[index].drive(
-                                          Tween<Offset>(
-                                            begin: const Offset(0, 0.1),
-                                            end: Offset.zero,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            InkWell(
-                                              onTap: () async {
-                                                if (action.hasSubMenu) {
-                                                  openSubMenu(action.subMenu!);
-                                                } else {
-                                                  await menuController
-                                                      .reverse();
-                                                  await childController
-                                                      .reverse();
-                                                  if (context.mounted) {
-                                                    Navigator.pop(context);
-                                                    action.onTap?.call();
-                                                  }
-                                                }
-                                              },
-                                              borderRadius: index == 0
-                                                  ? const BorderRadius.vertical(
-                                                      top: Radius.circular(16),
-                                                    )
-                                                  : index ==
-                                                        currentMenu.length - 1
-                                                  ? const BorderRadius.vertical(
-                                                      bottom: Radius.circular(
-                                                        16,
-                                                      ),
-                                                    )
-                                                  : BorderRadius.zero,
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: getResponsiveSize(
-                                                    context: context,
-                                                    size: 12,
-                                                  ),
-                                                  horizontal: getResponsiveSize(
-                                                    context: context,
-                                                    size: 20,
+                                    child: Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            if (action.hasSubMenu) {
+                                              openSubMenu(action.subMenu!);
+                                            } else {
+                                              await menuController.reverse();
+                                              await childController.reverse();
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                                action.onTap?.call();
+                                              }
+                                            }
+                                          },
+                                          borderRadius: index == 0
+                                              ? const BorderRadius.vertical(
+                                                  top: Radius.circular(16),
+                                                )
+                                              : index == currentMenu.length - 1
+                                              ? const BorderRadius.vertical(
+                                                  bottom: Radius.circular(16),
+                                                )
+                                              : BorderRadius.zero,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: getResponsiveSize(
+                                                context: context,
+                                                size: 12,
+                                              ),
+                                              horizontal: getResponsiveSize(
+                                                context: context,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            width: double.infinity,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  action.label,
+                                                  style: getTextStyle(
+                                                    context,
+                                                    isDelete,
                                                   ),
                                                 ),
-                                                width: double.infinity,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
-                                                    Text(
-                                                      action.label,
-                                                      style: getTextStyle(
-                                                        context,
+                                                    Icon(
+                                                      action.icon,
+                                                      color: getIconColor(
                                                         isDelete,
                                                       ),
                                                     ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Icon(
-                                                          action.icon,
-                                                          color: getIconColor(
-                                                            isDelete,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
                                                   ],
                                                 ),
-                                              ),
+                                              ],
                                             ),
-                                            if (index != currentMenu.length - 1)
-                                              Divider(
-                                                height: 1,
-                                                color:
-                                                    widget.dividerColor ??
-                                                    (widget.isDark ?? false
-                                                        ? Colors.white12
-                                                        : Colors.grey[300]),
-                                              ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }),
-                                ],
-                              ),
-                            ),
+                                        if (index != currentMenu.length - 1)
+                                          Divider(
+                                            height: 1,
+                                            color:
+                                                widget.dividerColor ??
+                                                (widget.isDark ?? false
+                                                    ? Colors.white12
+                                                    : Colors.grey[300]),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
