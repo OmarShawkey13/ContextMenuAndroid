@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:context_menu_android/features/context_menu/presentation/widget/ios_style_context_menu.dart';
+import 'package:context_menu_android/features/context_menu/presentation/screen/ios_style_context_menu.dart';
 
 void main() {
   testWidgets('Context menu renders child correctly', (

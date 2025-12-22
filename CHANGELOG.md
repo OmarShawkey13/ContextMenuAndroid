@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.7] - 2025-12-22
+
+### 🚀 Enhancements & Fixes
+
+- 🎨 **New `backgroundMenuColor` parameter**: Added a new parameter `backgroundMenuColor` to allow customizing the menu's background color independently.
+- 🐛 **Fixed `backgroundColor`**: The `backgroundColor` parameter now correctly colors the background of the context menu panel as intended.
+- 🧹 **Code Cleanup**: General code cleanup and improvements for better readability and maintainability.
+- ⚡️ **Performance & Stability**: Enhanced performance and stability of the package.
+- 🎯 **SDK Update**: Updated minimum Dart SDK requirement to **^3.10.4**.
+
+---
+
 ## [1.0.6] - 2025-12-05
 
 ### 🛠 Bug fixes & Quality Improvements

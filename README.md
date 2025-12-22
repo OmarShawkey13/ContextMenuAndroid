@@ -29,7 +29,7 @@ Add to your project:
 
 ```yaml
 dependencies:
-  ios_style_context_menu: ^1.0.5
+  ios_style_context_menu: ^1.0.7
 ```
 
 Then run:

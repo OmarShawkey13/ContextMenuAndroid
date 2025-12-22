@@ -1,5 +1,5 @@
 import 'package:context_menu_android/features/context_menu/data/models/context_menu.dart';
-import 'package:context_menu_android/features/context_menu/presentation/widget/ios_style_context_menu.dart';
+import 'package:context_menu_android/features/context_menu/presentation/screen/ios_style_context_menu.dart';
 import 'package:flutter/material.dart';
 
 void main() {
