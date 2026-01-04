@@ -16,9 +16,10 @@ class ContextMenuChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScaleTransition(
-      scale: Tween(begin: 0.8, end: 1.0).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeInExpo),
-      ),
+      scale: Tween(
+        begin: 0.8,
+        end: 1.0,
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInExpo)),
       child: FadeTransition(
         opacity: opacity,
         child: ConstrainedBox(

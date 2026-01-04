@@ -11,14 +11,20 @@ import 'package:flutter/material.dart';
 /// Used internally by [IosStyleContextMenu].
 class BlurBackground extends StatelessWidget {
   final Color? backgroundColor;
-  const BlurBackground({super.key, required this.backgroundColor});
+  final double? blurSigma;
+
+  const BlurBackground({
+    super.key,
+    required this.backgroundColor,
+    this.blurSigma,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
       filter: ImageFilter.blur(
-        sigmaX: 10,
-        sigmaY: 10,
+        sigmaX: blurSigma ?? 10,
+        sigmaY: blurSigma ?? 10,
       ),
       child: Container(
         color: backgroundColor ?? Colors.black.withValues(alpha: 0.15),

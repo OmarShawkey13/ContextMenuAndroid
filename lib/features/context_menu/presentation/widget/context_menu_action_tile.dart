@@ -53,12 +53,11 @@ class ContextMenuActionTile extends StatelessWidget {
             children: [
               Text(
                 action.label,
-                style: widget.textStyle?.copyWith(
-                  color: isDelete ? Colors.red : null,
-                ) ??
-                    TextStyle(
-                      color: isDelete ? Colors.red : Colors.black,
-                    ),
+                style:
+                    widget.textStyle?.copyWith(
+                      color: isDelete ? Colors.red : null,
+                    ) ??
+                    TextStyle(color: isDelete ? Colors.red : Colors.black),
               ),
               Icon(
                 action.icon,

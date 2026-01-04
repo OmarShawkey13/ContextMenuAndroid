@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.8] - 2025-01-20
+
+### 🚀 New Features & Enhancements
+
+- 🌫 **New `blurSigma` parameter**: Added `blurSigma` to allow developers to control the intensity of the background blur (default is `10.0`). This gives more flexibility in achieving the desired visual effect.
+- 📖 **Documentation Update**: Updated README with detailed customization options and better architecture overview.
+
+---
+
 ## [1.0.7] - 2025-12-22
 
 ### 🚀 Enhancements & Fixes

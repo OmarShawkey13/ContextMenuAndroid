@@ -54,6 +54,7 @@ class IosStyleContextMenu extends StatefulWidget {
   final EdgeInsetsGeometry? contentPadding;
   final double? textSize;
   final double? iconSize;
+  final double? blurSigma;
 
   const IosStyleContextMenu({
     super.key,
@@ -69,6 +70,7 @@ class IosStyleContextMenu extends StatefulWidget {
     this.contentPadding,
     this.textSize,
     this.iconSize,
+    this.blurSigma,
   });
 
   @override
@@ -109,9 +111,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   void _initMenuAnimation() {
     menuController = AnimationController(
       vsync: this,
-      duration: Duration(
-        milliseconds: min(600, 80 * menuStack.last.length),
-      ),
+      duration: Duration(milliseconds: min(600, 80 * menuStack.last.length)),
     );
 
     actionAnimations = List.generate(menuStack.last.length, (index) {
@@ -174,6 +174,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
           children: [
             BlurBackground(
               backgroundColor: widget.backgroundColor,
+              blurSigma: widget.blurSigma,
             ),
             SafeArea(
               child: Column(
@@ -205,5 +206,3 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     );
   }
 }
-
-
