@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.9] - 2025-01-20
+
+### 🚀 Major Enhancements & Refactoring
+
+- ⚡️ **Haptic Feedback**: Added iOS-style haptic feedback (`mediumImpact` on open, `lightImpact` on interaction) for a more tactile experience.
+- 🏗 **Architecture Core**: Introduced `ColorsManager` and `TextStylesManager` for better theme handling and code maintainability.
+- 🔄 **Model Refactoring**: Renamed `ContextMenuAndroid` model to `ContextMenuItem` for better clarity and API naming conventions.
+- 🛠 **New `ContextMenuWrapper`**: Added a dedicated wrapper widget to simplify integration. Just wrap your widget and pass actions!
+- 🎨 **Adaptive Themes**: Improved dark/light mode detection using `Theme.of(context).brightness` as a fallback.
+- ♿️ **Accessibility**: Added `Semantics` support (via standard widgets) and improved focus hierarchy.
+- 📜 **Scrollable Menus**: Added `SingleChildScrollView` to the menu panel to prevent overflows on smaller screens or long lists.
+- 🧪 **Destructive Actions**: Added explicit `isDestructive` property to `ContextMenuItem` with automatic label-based inference.
+- 🧼 **Code Quality**: Switched to `withValues` for colors (Flutter 3.24+ standard) and optimized animation controllers.
+
+---
+
 ## [1.0.8] - 2025-01-20
 
 ### 🚀 New Features & Enhancements

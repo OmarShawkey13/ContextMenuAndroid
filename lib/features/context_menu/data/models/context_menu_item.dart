@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 ///
 /// Each action contains an icon, a label, and a callback function
 /// that is triggered when the user taps the action.
-class ContextMenuAndroid {
+class ContextMenuItem {
   /// The icon displayed next to the label.
   final IconData icon;
 
@@ -15,15 +15,23 @@ class ContextMenuAndroid {
   final VoidCallback? onTap;
 
   /// An optional list of sub-menu items.
-  final List<ContextMenuAndroid>? subMenu;
+  final List<ContextMenuItem>? subMenu;
 
-  /// Creates a [ContextMenuAndroid] item with [icon], [label], and [onTap] callback, and optional [subMenu].
-  ContextMenuAndroid({
+  /// Whether this action is destructive (e.g., Delete).
+  /// If null, it will be inferred from the label.
+  final bool? isDestructive;
+
+  /// Creates a [ContextMenuItem] item with [icon], [label], and [onTap] callback, and optional [subMenu].
+  const ContextMenuItem({
     required this.icon,
     required this.label,
     this.onTap,
     this.subMenu,
+    this.isDestructive,
   });
 
   bool get hasSubMenu => subMenu != null && subMenu!.isNotEmpty;
+
+  bool get effectiveIsDestructive =>
+      isDestructive ?? label.toLowerCase().contains('delete');
 }

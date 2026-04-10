@@ -1,6 +1,6 @@
 name: context_menu_android
 description: iOS-style context menu widget for Flutter with blur, smooth animations, and nested sub-menus; optimized for Android.
-version: 1.0.8
+version: 1.0.9
 
 homepage: https://github.com/OmarShawkey13/ContextMenuAndroid
 repository: https://github.com/OmarShawkey13/ContextMenuAndroid
@@ -18,14 +18,14 @@ topics:
 # These appear on pub.dev package page
 screenshots:
   - description: Static preview of the iOS-style context menu on Android
-    path: assets/images/example.jpg
+    path: assets/images/example.png
   - description: Animated preview of opening and selecting actions
     path: assets/images/preview.gif
 
 environment:
-  sdk: ^3.10.4
-  # Dart SDK ^3.9.2 implies Flutter ≥ 3.24 تقريبًا؛ حدّد الحد الأدنى بشكل واضح
-  flutter: ">=3.16.0"
+  sdk: ^3.11.4
+  # Minimum Flutter version for modern features
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
@@ -40,5 +40,5 @@ flutter:
 # لا توجد أصول مطلوبة للتشغيل، الصور تُستخدم فقط لصفحة pub.dev عبر `screenshots` أعلاه.
 # لو كنت ستستهلك الصور برمجيًا داخل الباكدج، وقتها أضف assets هنا.
 # assets:
-#   - assets/images/example.jpg
+#   - assets/images/example.png
 #   - assets/images/preview.gif

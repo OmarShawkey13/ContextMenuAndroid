@@ -1,49 +1,16 @@
 import 'dart:math';
+import 'package:context_menu_android/core/theme/colors.dart';
+import 'package:context_menu_android/features/context_menu/data/models/context_menu_item.dart';
 import 'package:context_menu_android/features/context_menu/presentation/widget/blur_background.dart';
 import 'package:context_menu_android/features/context_menu/presentation/widget/context_menu_child.dart';
 import 'package:context_menu_android/features/context_menu/presentation/widget/context_menu_panel.dart';
+import 'package:context_menu_android/features/context_menu/presentation/widget/haptic_feedback_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:context_menu_android/features/context_menu/data/models/context_menu.dart';
 
 /// A customizable iOS-style context menu for Android (using a blur background and smooth animations).
-///
-/// Displays a dialog overlay with a blurred background, a target widget [child],
-/// and a list of tappable [actions].
-///
-/// This widget provides an iOS-like context menu experience, including delete highlighting,
-/// optional dark mode, and animated transitions for each action item.
-///
-/// Example usage:
-/// ```dart
-/// showDialog(
-///   context: context,
-///   builder: (_) => IosStyleContextMenu(
-///     child: YourWidget(),
-///     actions: [
-///       ContextMenuAndroid(
-///         icon: Icons.edit,
-///         label: 'Edit',
-///         onTap: () => print('Edit tapped'),
-///       ),
-///     ],
-///   ),
-/// );
-/// ```
-/// A customizable iOS-style context menu for Android (blur + smooth animations).
-///
-/// Displays a dialog overlay with:
-/// - Blurred background
-/// - Animated target [child]
-/// - A list of tappable [actions]
-///
-/// Supports:
-/// - Dark mode
-/// - Delete highlighting
-/// - Nested sub-menus
-/// - Responsive sizing
 class IosStyleContextMenu extends StatefulWidget {
   final Widget child;
-  final List<ContextMenuAndroid> actions;
+  final List<ContextMenuItem> actions;
   final bool? isDark;
   final TextStyle? textStyle;
   final Color? backgroundColor;
@@ -83,7 +50,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   late Animation<double> childOpacity;
   late AnimationController menuController;
   late List<Animation<double>> actionAnimations;
-  late List<List<ContextMenuAndroid>> menuStack;
+  late List<List<ContextMenuItem>> menuStack;
 
   @override
   void initState() {
@@ -94,7 +61,6 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     _startAnimations();
   }
 
-  /// Initializes animation for the target child (scale + fade).
   void _initChildAnimation() {
     childController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -107,7 +73,6 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     );
   }
 
-  /// Initializes animations for context menu actions.
   void _initMenuAnimation() {
     menuController = AnimationController(
       vsync: this,
@@ -124,15 +89,16 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     });
   }
 
-  /// Starts menu + child animations with slight delay.
   void _startAnimations() async {
-    await Future<void>.delayed(const Duration(milliseconds: 100));
-    await childController.forward();
-    await menuController.forward();
+    await HapticFeedbackHelper.triggerMedium();
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    if (!mounted) return;
+    childController.forward();
+    menuController.forward();
   }
 
-  /// Opens a nested sub-menu.
-  void _openSubMenu(List<ContextMenuAndroid> subMenu) {
+  void _openSubMenu(List<ContextMenuItem> subMenu) {
+    HapticFeedbackHelper.triggerLight();
     setState(() {
       menuStack.add(subMenu);
       _initMenuAnimation();
@@ -140,8 +106,8 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     });
   }
 
-  /// Closes current sub-menu.
   void _closeSubMenu() {
+    HapticFeedbackHelper.triggerLight();
     if (menuStack.length > 1) {
       setState(() {
         menuStack.removeLast();
@@ -160,6 +126,9 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkTheme =
+        widget.isDark ?? (Theme.of(context).brightness == Brightness.dark);
+
     return GestureDetector(
       onTap: () async {
         await menuController.reverse();
@@ -167,37 +136,49 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
         if (context.mounted) Navigator.pop(context);
       },
       child: Dialog(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ColorsManager.transparent,
         insetPadding: EdgeInsets.zero,
         child: Stack(
-          alignment: Alignment.center,
+          alignment: widget.menuAlignment ?? Alignment.center,
           children: [
             BlurBackground(
-              backgroundColor: widget.backgroundColor,
+              backgroundColor:
+                  widget.backgroundColor ??
+                  ColorsManager.getBlurOverlayColor(isDarkTheme),
               blurSigma: widget.blurSigma,
             ),
             SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ContextMenuChild(
-                    controller: childController,
-                    opacity: childOpacity,
-                    child: widget.child,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding:
+                      widget.contentPadding ??
+                      const EdgeInsets.symmetric(vertical: 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ContextMenuChild(
+                        controller: childController,
+                        opacity: childOpacity,
+                        child: widget.child,
+                      ),
+                      const SizedBox(height: 12),
+                      ContextMenuPanel(
+                        widget: widget,
+                        menu: menuStack.last,
+                        animations: actionAnimations,
+                        hasBack: menuStack.length > 1,
+                        onBack: _closeSubMenu,
+                        onOpenSubMenu: _openSubMenu,
+                        menuController: menuController,
+                        childController: childController,
+                        backgroundMenuColor:
+                            widget.backgroundMenuColor ??
+                            ColorsManager.getMenuBackgroundColor(isDarkTheme),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  ContextMenuPanel(
-                    widget: widget,
-                    menu: menuStack.last,
-                    animations: actionAnimations,
-                    hasBack: menuStack.length > 1,
-                    onBack: _closeSubMenu,
-                    onOpenSubMenu: _openSubMenu,
-                    menuController: menuController,
-                    childController: childController,
-                    backgroundMenuColor: widget.backgroundMenuColor,
-                  ),
-                ],
+                ),
               ),
             ),
           ],
