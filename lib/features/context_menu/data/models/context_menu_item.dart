@@ -11,6 +11,9 @@ class ContextMenuItem {
   /// The text label for the menu action.
   final String label;
 
+  /// An optional secondary text displayed below the label.
+  final String? subtitle;
+
   /// The function that is executed when the action is tapped.
   final VoidCallback? onTap;
 
@@ -21,13 +24,18 @@ class ContextMenuItem {
   /// If null, it will be inferred from the label.
   final bool? isDestructive;
 
+  /// Whether the action is interactive.
+  final bool enabled;
+
   /// Creates a [ContextMenuItem] item with [icon], [label], and [onTap] callback, and optional [subMenu].
   const ContextMenuItem({
     required this.icon,
     required this.label,
+    this.subtitle,
     this.onTap,
     this.subMenu,
     this.isDestructive,
+    this.enabled = true,
   });
 
   bool get hasSubMenu => subMenu != null && subMenu!.isNotEmpty;

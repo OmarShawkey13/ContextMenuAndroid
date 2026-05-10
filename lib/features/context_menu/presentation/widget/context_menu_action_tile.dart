@@ -31,57 +31,80 @@ class ContextMenuActionTile extends StatelessWidget {
     final bool isDestructive = action.effectiveIsDestructive;
 
     // Determine the base color based on theme and properties
-    final Color defaultColor = isDark ? Colors.white : Colors.black;
-    final Color contentColor = isDestructive
-        ? Colors.red
-        : (widget.iconColor ?? defaultColor);
+    final Color defaultColor = isDark
+        ? Colors.white
+        : Colors.black.withValues(alpha: 0.8);
+    final Color contentColor = !action.enabled
+        ? Colors.grey
+        : (isDestructive ? Colors.red : (widget.iconColor ?? defaultColor));
 
-    return FadeTransition(
-      opacity: animation,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () async {
-            if (action.hasSubMenu) {
-              onOpenSubMenu(action.subMenu!);
-            } else {
-              await HapticFeedbackHelper.triggerLight();
-              await menuController.reverse();
-              await childController.reverse();
-              if (context.mounted) {
-                Navigator.pop(context);
-                action.onTap?.call();
-              }
-            }
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: getResponsiveSize(context: context, size: 14),
-              horizontal: getResponsiveSize(context: context, size: 16),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    action.label,
-                    style:
-                        widget.textStyle?.copyWith(
-                          color: isDestructive ? Colors.red : null,
-                        ) ??
-                        TextStyle(
-                          color: contentColor,
-                          fontSize: widget.textSize ?? 16,
-                          fontWeight: FontWeight.w400,
+    return Semantics(
+      button: true,
+      enabled: action.enabled,
+      label: action.label,
+      hint: action.subtitle,
+      child: FadeTransition(
+        opacity: animation,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: action.enabled
+                ? () async {
+                    if (action.hasSubMenu) {
+                      onOpenSubMenu(action.subMenu!);
+                    } else {
+                      await HapticFeedbackHelper.triggerLight();
+                      await menuController.reverse();
+                      await childController.reverse();
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        action.onTap?.call();
+                      }
+                    }
+                  }
+                : null,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: getResponsiveSize(context: context, size: 12),
+                horizontal: getResponsiveSize(context: context, size: 16),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          action.label,
+                          style:
+                              widget.textStyle?.copyWith(color: contentColor) ??
+                              TextStyle(
+                                color: contentColor,
+                                fontSize: widget.textSize ?? 16,
+                                fontWeight: FontWeight.w400,
+                              ),
                         ),
+                        if (action.subtitle != null)
+                          Text(
+                            action.subtitle!,
+                            style: TextStyle(
+                              color: contentColor.withValues(alpha: 0.6),
+                              fontSize: (widget.textSize ?? 16) * 0.75,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                Icon(
-                  action.icon,
-                  color: contentColor,
-                  size: widget.iconSize ?? 22,
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Icon(
+                    action.hasSubMenu ? Icons.chevron_right : action.icon,
+                    color: contentColor,
+                    size: widget.iconSize ?? 22,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

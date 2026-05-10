@@ -22,11 +22,13 @@ class IosStyleContextMenu extends StatefulWidget {
   final double? textSize;
   final double? iconSize;
   final double? blurSigma;
+  final Rect childRect;
 
   const IosStyleContextMenu({
     super.key,
     required this.child,
     required this.actions,
+    required this.childRect,
     this.isDark,
     this.textStyle,
     this.backgroundColor,
@@ -128,6 +130,12 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   Widget build(BuildContext context) {
     final bool isDarkTheme =
         widget.isDark ?? (Theme.of(context).brightness == Brightness.dark);
+    final screenSize = MediaQuery.of(context).size;
+
+    // Calculate available space to decide position
+    final double spaceAbove = widget.childRect.top;
+    final double spaceBelow = screenSize.height - widget.childRect.bottom;
+    final bool showMenuBelow = spaceBelow > spaceAbove;
 
     return GestureDetector(
       onTap: () async {
@@ -135,11 +143,9 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
         await childController.reverse();
         if (context.mounted) Navigator.pop(context);
       },
-      child: Dialog(
-        backgroundColor: ColorsManager.transparent,
-        insetPadding: EdgeInsets.zero,
+      child: Material(
+        color: Colors.transparent,
         child: Stack(
-          alignment: widget.menuAlignment ?? Alignment.center,
           children: [
             BlurBackground(
               backgroundColor:
@@ -147,36 +153,45 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                   ColorsManager.getBlurOverlayColor(isDarkTheme),
               blurSigma: widget.blurSigma,
             ),
-            SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding:
-                      widget.contentPadding ??
-                      const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ContextMenuChild(
-                        controller: childController,
-                        opacity: childOpacity,
-                        child: widget.child,
-                      ),
-                      const SizedBox(height: 12),
-                      ContextMenuPanel(
-                        widget: widget,
-                        menu: menuStack.last,
-                        animations: actionAnimations,
-                        hasBack: menuStack.length > 1,
-                        onBack: _closeSubMenu,
-                        onOpenSubMenu: _openSubMenu,
-                        menuController: menuController,
-                        childController: childController,
-                        backgroundMenuColor:
-                            widget.backgroundMenuColor ??
-                            ColorsManager.getMenuBackgroundColor(isDarkTheme),
-                      ),
-                    ],
+            // The Child Preview
+            Positioned(
+              top: widget.childRect.top,
+              left: widget.childRect.left,
+              width: widget.childRect.width,
+              height: widget.childRect.height,
+              child: ContextMenuChild(
+                controller: childController,
+                opacity: childOpacity,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: widget.child,
+                ),
+              ),
+            ),
+            // The Menu Panel
+            Positioned(
+              top: showMenuBelow ? widget.childRect.bottom + 12 : null,
+              bottom: showMenuBelow
+                  ? null
+                  : (screenSize.height - widget.childRect.top) + 12,
+              left: 16,
+              right: 16,
+              child: FadeTransition(
+                opacity: childOpacity,
+                child: Align(
+                  alignment: widget.menuAlignment ?? Alignment.center,
+                  child: ContextMenuPanel(
+                    widget: widget,
+                    menu: menuStack.last,
+                    animations: actionAnimations,
+                    hasBack: menuStack.length > 1,
+                    onBack: _closeSubMenu,
+                    onOpenSubMenu: _openSubMenu,
+                    menuController: menuController,
+                    childController: childController,
+                    backgroundMenuColor:
+                        widget.backgroundMenuColor ??
+                        ColorsManager.getMenuBackgroundColor(isDarkTheme),
                   ),
                 ),
               ),

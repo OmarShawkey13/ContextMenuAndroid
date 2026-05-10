@@ -62,11 +62,18 @@ class ContextMenuWrapper extends StatelessWidget {
   });
 
   void _showMenu(BuildContext context) {
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Rect rect = offset & renderBox.size;
+
     showDialog<void>(
       context: context,
       barrierDismissible: true,
+      useSafeArea: false,
+      barrierColor: Colors.transparent,
       builder: (_) => IosStyleContextMenu(
         actions: actions,
+        childRect: rect,
         isDark: isDark,
         textStyle: textStyle,
         backgroundColor: backgroundColor,

@@ -17,22 +17,10 @@ class ContextMenuChild extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: Tween(
-        begin: 0.8,
-        end: 1.0,
-      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInExpo)),
-      child: FadeTransition(
-        opacity: opacity,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.8,
-            maxHeight: MediaQuery.of(context).size.height * 0.4,
-          ),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: child,
-          ),
-        ),
-      ),
+        begin: 1.0,
+        end: 1.05,
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut)),
+      child: FadeTransition(opacity: opacity, child: child),
     );
   }
 }

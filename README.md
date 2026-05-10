@@ -4,23 +4,28 @@ A **Flutter package** that brings the elegant **iOS-style context menu** experie
 Perfect for creating beautiful **long-press menus** on any widget, such as cards, images, or list items — all with the finesse of Apple design.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/OmarShawkey13/ContextMenuAndroid/main/assets/images/example.jpg" width="270" alt="iOS-style context menu on Android"/>
+  <img src="https://raw.githubusercontent.com/OmarShawkey13/ContextMenuAndroid/main/assets/images/example.png" width="270" alt="iOS-style context menu on Android"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/OmarShawkey13/ContextMenuAndroid/main/assets/images/preview.gif" width="270" alt="iOS-style context menu animation"/>
 </p>
 
 ---
 
-## ✨ Features (v1.0.9)
+## ✨ Features (v1.1.0)
 
-| Feature                       | Description                                                                         |
-|-------------------------------|-------------------------------------------------------------------------------------|
-| 🍏 **True iOS Feel**          | Replicates iOS’s smooth context menu interaction, animations, and visual hierarchy. |
-| 📳 **Haptic Feedback**        | Built-in tactile feedback (vibration) on opening and interaction.                  |
-| 🛠 **Easy Wrapper**            | New `ContextMenuWrapper` widget for effortless integration.                        |
-| 💫 **Smooth Transitions**     | Powered by Flutter animations and `BackdropFilter` for silky blur effects.          |
-| 🪄 **Nested Menus Support**   | Easily create sub-menus with back navigation — ideal for complex actions.           |
-| 🌗 **Adaptive Themes**        | Automatically detects system theme or use `isDark` to override.                     |
-| 🧠 **Smart Destructive Actions** | Explicit `isDestructive` property or automatic "Delete" keyword detection.         |
-| 📱 **Scrollable & Responsive** | Menus are now scrollable and adapt to all screen sizes perfectly.                  |
+| Feature                        | Description                                                                     |
+|--------------------------------|---------------------------------------------------------------------------------|
+| 🍏 **True iOS 17+ Feel**       | Replicates the latest iOS smooth interaction, animations, and visual hierarchy. |
+| 🎯 **Dynamic Positioning**     | Menus automatically appear **above or below** the widget based on screen space. |
+| 💨 **Modern Preview (Pop)**    | The target widget stays in place and scales with a smooth elastic "Pop" effect. |
+| 🧊 **Glassmorphism UI**        | Real-time background blur and refined shadows for a premium glassy look.        |
+| 📳 **Haptic Feedback**         | Built-in tactile feedback (vibration) on opening and interaction.               |
+| 🛠 **Easy Wrapper**            | `ContextMenuWrapper` widget for effortless integration in seconds.              |
+| 🪄 **Nested Menus Support**    | Easily create sub-menus with back navigation and automatic chevron indicators.  |
+| 🌗 **Adaptive Themes**         | Automatically detects system theme or use `isDark` to override.                 |
+| 🧠 **Smart Actions**           | Supports **Subtitles**, **Disabled states**, and **Destructive** (red) styling. |
+| 📱 **Scrollable & Responsive** | Menus are scrollable for long lists and adapt to all screen sizes perfectly.    |
+| ♿️ **Accessibility**           | Full `Semantics` support for screen readers and inclusive design.               |
 
 ---
 
@@ -30,7 +35,7 @@ Add to your project's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  context_menu_android: ^1.0.9
+  context_menu_android: ^1.1.0
 ```
 
 Import it in your code:
@@ -52,11 +57,18 @@ ContextMenuWrapper(
     ContextMenuItem(
       icon: Icons.share,
       label: 'Share',
+      subtitle: 'Send link to others',
       onTap: () => print('Shared!'),
+    ),
+    ContextMenuItem(
+      icon: Icons.copy,
+      label: 'Copy',
+      onTap: () => print('Copied!'),
     ),
     ContextMenuItem(
       icon: Icons.delete,
       label: 'Delete', 
+      subtitle: 'Permanent action',
       isDestructive: true, // Highlights in red
       onTap: () => print('Deleted!'),
     ),
@@ -94,6 +106,7 @@ ContextMenuWrapper(
         ContextMenuItem(
           icon: Icons.download,
           label: 'Download',
+          subtitle: 'HD Quality',
           onTap: () => print('Downloading...'),
         ),
       ],
@@ -104,17 +117,32 @@ ContextMenuWrapper(
 
 ---
 
-## ⚙️ Customization Options (`ContextMenuWrapper`)
+## ⚙️ Customization Options
 
-| Property              | Type                       | Description                                                                |
-|-----------------------|----------------------------|----------------------------------------------------------------------------|
-| `child`               | `Widget`                   | **Required.** The widget that triggers the context menu.                   |
-| `actions`             | `List<ContextMenuItem>`    | **Required.** A list of action items.                                     |
-| `isDark`              | `bool?`                    | Forces dark mode (if not set, it follows system theme).                    |
-| `blurSigma`           | `double?`                  | Controls the intensity of the background blur (default: 10).               |
-| `backgroundMenuColor` | `Color?`                   | Background color of the menu container itself.                             |
-| `iconColor`           | `Color?`                   | Default color for icons.                                                  |
-| `textStyle`           | `TextStyle?`               | Custom text style for action labels.                                       |
+### `ContextMenuWrapper`
+
+| Property              | Type                    | Description                                                    |
+|-----------------------|-------------------------|----------------------------------------------------------------|
+| `child`               | `Widget`                | **Required.** The widget that triggers the context menu.       |
+| `actions`             | `List<ContextMenuItem>` | **Required.** A list of action items.                          |
+| `isDark`              | `bool?`                 | Forces dark mode (if not set, it follows system theme).        |
+| `blurSigma`           | `double?`               | Controls the intensity of the background blur (default: 10).   |
+| `backgroundMenuColor` | `Color?`                | Background color of the menu container itself.                 |
+| `iconColor`           | `Color?`                | Default color for icons.                                       |
+| `textStyle`           | `TextStyle?`            | Custom text style for action labels.                           |
+| `menuAlignment`       | `AlignmentGeometry?`    | Alignment of the menu relative to the child (Start/Center/End) |
+
+### `ContextMenuItem`
+
+| Property        | Type                     | Description                                               |
+|-----------------|--------------------------|-----------------------------------------------------------|
+| `icon`          | `IconData`               | **Required.** The icon displayed next to the label.       |
+| `label`         | `String`                 | **Required.** The main text for the action.               |
+| `subtitle`      | `String?`                | Optional secondary text below the label.                  |
+| `onTap`         | `VoidCallback?`          | Function executed when the action is tapped.              |
+| `subMenu`       | `List<ContextMenuItem>?` | Optional list of items for a nested menu.                 |
+| `isDestructive` | `bool?`                  | If true, colors the item red. Auto-detected for "Delete". |
+| `enabled`       | `bool`                   | If false, the item is greyed out and non-interactive.     |
 
 ---
 
@@ -125,7 +153,7 @@ The project follows a Clean Architecture inspired structure:
 ```
 lib/
 ├── core/
-│   └── managers/               # Color and Font managers
+│   └── theme/                  # Color and Text Style managers
 └── features/
     └── context_menu/
         ├── data/
@@ -139,6 +167,7 @@ lib/
             └── widget/
                 ├── context_menu_wrapper.dart   # Easy integration widget
                 ├── context_menu_panel.dart     # Menu container
+                ├── context_menu_child.dart     # Animated preview widget
                 └── ...
 ```
 

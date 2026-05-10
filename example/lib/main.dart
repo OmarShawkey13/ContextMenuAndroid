@@ -54,24 +54,33 @@ class ContextMenuDemo extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              /// 🚀 Example 1: Using ContextMenuWrapper (Enhanced Visuals)
-              const Text('Using ContextMenuWrapper'),
+              /// 🚀 Example 1: Modern iOS Style (Enhanced)
+              const Text('Modern iOS Style with Subtitles'),
               const SizedBox(height: 12),
               ContextMenuWrapper(
                 actions: [
                   ContextMenuItem(
                     icon: Icons.share_rounded,
                     label: 'Share',
+                    subtitle: 'Send to friends or social media',
                     onTap: () => debugPrint('Share tapped'),
                   ),
                   ContextMenuItem(
-                    icon: Icons.edit_rounded,
-                    label: 'Edit',
-                    onTap: () => debugPrint('Edit tapped'),
+                    icon: Icons.copy_rounded,
+                    label: 'Copy Link',
+                    subtitle: 'Copy to clipboard',
+                    onTap: () => debugPrint('Copy tapped'),
+                  ),
+                  ContextMenuItem(
+                    icon: Icons.archive_outlined,
+                    label: 'Archive Item',
+                    enabled: false,
+                    onTap: () {},
                   ),
                   ContextMenuItem(
                     icon: Icons.delete_rounded,
                     label: 'Delete',
+                    subtitle: 'This action cannot be undone',
                     isDestructive: true,
                     onTap: () => debugPrint('Delete tapped'),
                   ),
@@ -110,13 +119,15 @@ class ContextMenuDemo extends StatelessWidget {
               const SizedBox(height: 50),
 
               /// 🚀 Example 2: Nested Sub-menus (Refined Colors)
-              const Text('Nested Sub-menus'),
+              const Text('Nested Sub-menus with Icons'),
               const SizedBox(height: 12),
               ContextMenuWrapper(
+                menuAlignment: .bottomStart,
                 actions: [
                   ContextMenuItem(
                     icon: Icons.play_arrow_rounded,
                     label: 'Play Next',
+                    subtitle: 'Add to the top of queue',
                     onTap: () {},
                   ),
                   ContextMenuItem(
@@ -130,7 +141,8 @@ class ContextMenuDemo extends StatelessWidget {
                       ),
                       ContextMenuItem(
                         icon: Icons.download_rounded,
-                        label: 'Download High Quality',
+                        label: 'Download',
+                        subtitle: 'High Quality (24-bit)',
                         onTap: () {},
                       ),
                       ContextMenuItem(

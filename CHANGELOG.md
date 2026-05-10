@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0] - 2025-01-21
+
+### 🚀 Modern iOS 17+ Evolution
+
+- 🎯 **Dynamic Positioning**: Menus now appear automatically above or below the target widget based on its screen position.
+- 💨 **Modern Preview ("Pop" Effect)**: The original widget now stays in its screen position and scales slightly with an elastic animation when opening.
+- ➡️ **Trailing Icons**: Icons moved to the right side (Trailing) to match the latest iOS design language.
+- 📝 **Subtitles Support**: Added `subtitle` property to `ContextMenuItem` for secondary information.
+- 🧊 **Enhanced Glassmorphism**: Added `BackdropFilter` and refined shadows to the menu container for a premium "Glassy" look.
+- 🚫 **Disabled States**: Added `enabled` property to `ContextMenuItem` to handle non-interactive actions.
+- ♿️ **Full Semantics**: Added proper semantic labels and hints for better accessibility support.
+- 📏 **Adaptive Layout**: Refined horizontal centering and vertical spacing for various screen sizes.
+
 ## [1.0.9] - 2025-01-20
 
 ### 🚀 Major Enhancements & Refactoring

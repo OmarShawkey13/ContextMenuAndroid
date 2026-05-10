@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:context_menu_android/core/theme/colors.dart';
 import 'package:context_menu_android/features/context_menu/data/models/context_menu_item.dart';
 import 'package:context_menu_android/features/context_menu/presentation/screen/ios_style_context_menu.dart';
@@ -37,61 +38,80 @@ class ContextMenuPanel extends StatelessWidget {
     final Color dividerColor =
         widget.dividerColor ?? ColorsManager.getDividerColor(isDark);
 
-    return Container(
-      width: getResponsiveSize(context: context, size: 280),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: backgroundMenuColor,
-        borderRadius: BorderRadius.circular(16),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.45,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (hasBack)
-            Material(
-              color: Colors.transparent,
-              child: ListTile(
-                leading: Icon(
-                  Icons.arrow_back_ios_new_outlined,
-                  size: 18,
-                  color: contentColor,
-                ),
-                title: Text(
-                  'Back',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: contentColor,
-                  ),
-                ),
-                onTap: onBack,
-              ),
+      child: Container(
+        width: getResponsiveSize(context: context, size: 250),
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: backgroundMenuColor,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 20,
+              spreadRadius: 5,
             ),
-          if (hasBack) Divider(height: 1, thickness: 0.5, color: dividerColor),
-          ...List.generate(menu.length, (index) {
-            return Column(
+          ],
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ContextMenuActionTile(
-                  action: menu[index],
-                  animation: animations[index],
-                  isLast: index == menu.length - 1,
-                  widget: widget,
-                  onOpenSubMenu: onOpenSubMenu,
-                  menuController: menuController,
-                  childController: childController,
-                ),
-                if (index < menu.length - 1)
-                  Divider(
-                    height: 1,
-                    thickness: 0.5,
-                    color: dividerColor,
-                    indent: 16,
-                    endIndent: 16,
+                if (hasBack)
+                  Material(
+                    color: Colors.transparent,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.arrow_back_ios_new_outlined,
+                        size: 18,
+                        color: contentColor,
+                      ),
+                      title: Text(
+                        'Back',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: contentColor,
+                        ),
+                      ),
+                      onTap: onBack,
+                    ),
                   ),
+                if (hasBack)
+                  Divider(height: 1, thickness: 0.5, color: dividerColor),
+                ...List.generate(menu.length, (index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ContextMenuActionTile(
+                        action: menu[index],
+                        animation: animations[index],
+                        isLast: index == menu.length - 1,
+                        widget: widget,
+                        onOpenSubMenu: onOpenSubMenu,
+                        menuController: menuController,
+                        childController: childController,
+                      ),
+                      if (index < menu.length - 1)
+                        Divider(
+                          height: 1,
+                          thickness: 0.5,
+                          color: dividerColor,
+                          indent: 0,
+                          endIndent: 0,
+                        ),
+                    ],
+                  );
+                }),
               ],
-            );
-          }),
-        ],
+            ),
+          ),
+        ),
       ),
     );
   }
