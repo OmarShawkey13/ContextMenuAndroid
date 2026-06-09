@@ -11,21 +11,21 @@ Perfect for creating beautiful **long-press menus** on any widget, such as cards
 
 ---
 
-## ✨ Features (v1.1.0)
+## ✨ Features (v1.2.0)
 
-| Feature                        | Description                                                                     |
-|--------------------------------|---------------------------------------------------------------------------------|
-| 🍏 **True iOS 17+ Feel**       | Replicates the latest iOS smooth interaction, animations, and visual hierarchy. |
-| 🎯 **Dynamic Positioning**     | Menus automatically appear **above or below** the widget based on screen space. |
-| 💨 **Modern Preview (Pop)**    | The target widget stays in place and scales with a smooth elastic "Pop" effect. |
-| 🧊 **Glassmorphism UI**        | Real-time background blur and refined shadows for a premium glassy look.        |
-| 📳 **Haptic Feedback**         | Built-in tactile feedback (vibration) on opening and interaction.               |
-| 🛠 **Easy Wrapper**            | `ContextMenuWrapper` widget for effortless integration in seconds.              |
-| 🪄 **Nested Menus Support**    | Easily create sub-menus with back navigation and automatic chevron indicators.  |
-| 🌗 **Adaptive Themes**         | Automatically detects system theme or use `isDark` to override.                 |
-| 🧠 **Smart Actions**           | Supports **Subtitles**, **Disabled states**, and **Destructive** (red) styling. |
-| 📱 **Scrollable & Responsive** | Menus are scrollable for long lists and adapt to all screen sizes perfectly.    |
-| ♿️ **Accessibility**           | Full `Semantics` support for screen readers and inclusive design.               |
+| Feature                        | Description                                                                           |
+|--------------------------------|---------------------------------------------------------------------------------------|
+| 🍏 **True iOS 17+ Feel**       | Replicates the latest iOS smooth interaction, animations, and visual hierarchy.       |
+| 🎯 **Dynamic Positioning**     | Menus automatically appear **above or below** the widget based on screen space.       |
+| 💨 **Modern Preview (Pop)**    | The target widget stays in place and scales with a smooth elastic "Pop" effect.       |
+| 🧊 **Glassmorphism UI**        | Real-time background blur and refined shadows for a premium glassy look.              |
+| 📳 **Haptic Feedback**         | Built-in tactile feedback (vibration) on opening and interaction.                     |
+| 🛠 **Easy Wrapper**            | `ContextMenuWrapper` widget for effortless integration in seconds.                    |
+| 🪄 **Native Sub-Menus**        | Sub-menus smoothly pan horizontally with dynamic height resizing for a true iOS feel. |
+| 🌗 **Adaptive Themes**         | Automatically detects system theme or use `isDark` to override.                       |
+| 🧠 **Smart Actions**           | Supports **Subtitles**, **Disabled states**, and **Destructive** (red) styling.       |
+| 📱 **Scrollable & Responsive** | Menus are scrollable for long lists and adapt to all screen sizes perfectly.          |
+| ♿️ **Accessibility**           | Full `Semantics` support for screen readers and inclusive design.                     |
 
 ---
 
@@ -35,7 +35,7 @@ Add to your project's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  context_menu_android: ^1.1.0
+  context_menu_android: ^1.2.0
 ```
 
 Import it in your code:
@@ -121,16 +121,17 @@ ContextMenuWrapper(
 
 ### `ContextMenuWrapper`
 
-| Property              | Type                    | Description                                                    |
-|-----------------------|-------------------------|----------------------------------------------------------------|
-| `child`               | `Widget`                | **Required.** The widget that triggers the context menu.       |
-| `actions`             | `List<ContextMenuItem>` | **Required.** A list of action items.                          |
-| `isDark`              | `bool?`                 | Forces dark mode (if not set, it follows system theme).        |
-| `blurSigma`           | `double?`               | Controls the intensity of the background blur (default: 10).   |
-| `backgroundMenuColor` | `Color?`                | Background color of the menu container itself.                 |
-| `iconColor`           | `Color?`                | Default color for icons.                                       |
-| `textStyle`           | `TextStyle?`            | Custom text style for action labels.                           |
-| `menuAlignment`       | `AlignmentGeometry?`    | Alignment of the menu relative to the child (Start/Center/End) |
+| Property              | Type                    | Description                                                           |
+|-----------------------|-------------------------|-----------------------------------------------------------------------|
+| `child`               | `Widget`                | **Required.** The widget that triggers the context menu.              |
+| `actions`             | `List<ContextMenuItem>` | **Required.** A list of action items.                                 |
+| `childBorderRadius`   | `BorderRadiusGeometry?` | Border radius of the cloned preview. Defaults to `BorderRadius.zero`. |
+| `isDark`              | `bool?`                 | Forces dark mode (if not set, it follows system theme).               |
+| `blurSigma`           | `double?`               | Controls the intensity of the background blur (default: 10).          |
+| `backgroundMenuColor` | `Color?`                | Background color of the menu container itself.                        |
+| `iconColor`           | `Color?`                | Default color for icons.                                              |
+| `textStyle`           | `TextStyle?`            | Custom text style for action labels.                                  |
+| `menuAlignment`       | `AlignmentGeometry?`    | Alignment of the menu relative to the child (Start/Center/End)        |
 
 ### `ContextMenuItem`
 

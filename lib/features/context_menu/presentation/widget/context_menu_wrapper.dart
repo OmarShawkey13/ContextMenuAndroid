@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 
 /// A wrapper widget that simplifies the usage of the context menu.
 /// It listens for a long press and automatically shows the menu.
-class ContextMenuWrapper extends StatelessWidget {
+class ContextMenuWrapper extends StatefulWidget {
   /// The widget that triggers the context menu.
   final Widget child;
 
   /// The list of actions to show in the menu.
   final List<ContextMenuItem> actions;
+
+  /// Optional: Border radius applied to the cloned child.
+  final BorderRadiusGeometry? childBorderRadius;
 
   /// Optional: Force dark mode.
   final bool? isDark;
@@ -48,6 +51,7 @@ class ContextMenuWrapper extends StatelessWidget {
     super.key,
     required this.child,
     required this.actions,
+    this.childBorderRadius,
     this.isDark,
     this.textStyle,
     this.backgroundColor,
@@ -61,8 +65,16 @@ class ContextMenuWrapper extends StatelessWidget {
     this.blurSigma,
   });
 
+  @override
+  State<ContextMenuWrapper> createState() => _ContextMenuWrapperState();
+}
+
+class _ContextMenuWrapperState extends State<ContextMenuWrapper> {
+  final GlobalKey _childKey = GlobalKey();
+
   void _showMenu(BuildContext context) {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final RenderBox renderBox =
+        _childKey.currentContext?.findRenderObject() as RenderBox;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Rect rect = offset & renderBox.size;
 
@@ -72,26 +84,30 @@ class ContextMenuWrapper extends StatelessWidget {
       useSafeArea: false,
       barrierColor: Colors.transparent,
       builder: (_) => IosStyleContextMenu(
-        actions: actions,
+        actions: widget.actions,
         childRect: rect,
-        isDark: isDark,
-        textStyle: textStyle,
-        backgroundColor: backgroundColor,
-        backgroundMenuColor: backgroundMenuColor,
-        dividerColor: dividerColor,
-        iconColor: iconColor,
-        menuAlignment: menuAlignment,
-        contentPadding: contentPadding,
-        textSize: textSize,
-        iconSize: iconSize,
-        blurSigma: blurSigma,
-        child: child,
+        childBorderRadius: widget.childBorderRadius,
+        isDark: widget.isDark,
+        textStyle: widget.textStyle,
+        backgroundColor: widget.backgroundColor,
+        backgroundMenuColor: widget.backgroundMenuColor,
+        dividerColor: widget.dividerColor,
+        iconColor: widget.iconColor,
+        menuAlignment: widget.menuAlignment,
+        contentPadding: widget.contentPadding,
+        textSize: widget.textSize,
+        iconSize: widget.iconSize,
+        blurSigma: widget.blurSigma,
+        child: widget.child,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onLongPress: () => _showMenu(context), child: child);
+    return GestureDetector(
+      onLongPress: () => _showMenu(context),
+      child: KeyedSubtree(key: _childKey, child: widget.child),
+    );
   }
 }

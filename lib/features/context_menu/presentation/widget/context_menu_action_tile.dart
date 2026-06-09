@@ -1,7 +1,5 @@
 import 'package:context_menu_android/features/context_menu/data/models/context_menu_item.dart';
 import 'package:context_menu_android/features/context_menu/presentation/screen/ios_style_context_menu.dart';
-import 'package:context_menu_android/features/context_menu/presentation/utils/responsive_size.dart';
-import 'package:context_menu_android/features/context_menu/presentation/widget/haptic_feedback_wrapper.dart';
 import 'package:flutter/material.dart';
 
 /// Single action tile inside the context menu.
@@ -11,8 +9,7 @@ class ContextMenuActionTile extends StatelessWidget {
   final bool isLast;
   final IosStyleContextMenu widget;
   final void Function(List<ContextMenuItem>) onOpenSubMenu;
-  final AnimationController menuController;
-  final AnimationController childController;
+  final void Function([VoidCallback? action]) onClose;
 
   const ContextMenuActionTile({
     super.key,
@@ -21,8 +18,7 @@ class ContextMenuActionTile extends StatelessWidget {
     required this.isLast,
     required this.widget,
     required this.onOpenSubMenu,
-    required this.menuController,
-    required this.childController,
+    required this.onClose,
   });
 
   @override
@@ -53,21 +49,12 @@ class ContextMenuActionTile extends StatelessWidget {
                     if (action.hasSubMenu) {
                       onOpenSubMenu(action.subMenu!);
                     } else {
-                      await HapticFeedbackHelper.triggerLight();
-                      await menuController.reverse();
-                      await childController.reverse();
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                        action.onTap?.call();
-                      }
+                      onClose(action.onTap);
                     }
                   }
                 : null,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: getResponsiveSize(context: context, size: 12),
-                horizontal: getResponsiveSize(context: context, size: 16),
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Row(
                 children: [
                   Expanded(

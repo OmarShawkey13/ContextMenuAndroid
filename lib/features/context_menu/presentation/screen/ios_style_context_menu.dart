@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 class IosStyleContextMenu extends StatefulWidget {
   final Widget child;
   final List<ContextMenuItem> actions;
+  final BorderRadiusGeometry? childBorderRadius;
   final bool? isDark;
   final TextStyle? textStyle;
   final Color? backgroundColor;
@@ -29,6 +30,7 @@ class IosStyleContextMenu extends StatefulWidget {
     required this.child,
     required this.actions,
     required this.childRect,
+    this.childBorderRadius,
     this.isDark,
     this.textStyle,
     this.backgroundColor,
@@ -53,6 +55,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   late AnimationController menuController;
   late List<Animation<double>> actionAnimations;
   late List<List<ContextMenuItem>> menuStack;
+  bool _isClosing = false;
 
   @override
   void initState() {
@@ -61,6 +64,20 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     _initChildAnimation();
     _initMenuAnimation();
     _startAnimations();
+  }
+
+  Future<void> _closeMenu([VoidCallback? action]) async {
+    if (_isClosing) return;
+    setState(() => _isClosing = true);
+
+    await HapticFeedbackHelper.triggerLight();
+
+    await Future.wait([menuController.reverse(), childController.reverse()]);
+
+    if (mounted) {
+      Navigator.pop(context);
+      action?.call();
+    }
   }
 
   void _initChildAnimation() {
@@ -138,11 +155,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     final bool showMenuBelow = spaceBelow > spaceAbove;
 
     return GestureDetector(
-      onTap: () async {
-        await menuController.reverse();
-        await childController.reverse();
-        if (context.mounted) Navigator.pop(context);
-      },
+      onTap: () => _closeMenu(),
       child: Material(
         color: Colors.transparent,
         child: Stack(
@@ -163,7 +176,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                 controller: childController,
                 opacity: childOpacity,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: widget.childBorderRadius ?? BorderRadius.zero,
                   child: widget.child,
                 ),
               ),
@@ -187,8 +200,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
                     hasBack: menuStack.length > 1,
                     onBack: _closeSubMenu,
                     onOpenSubMenu: _openSubMenu,
-                    menuController: menuController,
-                    childController: childController,
+                    onClose: _closeMenu,
                     backgroundMenuColor:
                         widget.backgroundMenuColor ??
                         ColorsManager.getMenuBackgroundColor(isDarkTheme),

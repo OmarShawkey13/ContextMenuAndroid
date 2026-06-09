@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0] - 2026-06-10
+
+### 🚀 Elite Architectural & UX Improvements
+
+- 🎯 **Perfect Circular Clipping**: Introduced `childBorderRadius` property to precisely control the border radius of the cloned widget preview. Defaults to `BorderRadius.zero` to respect native shapes like circular avatars.
+- 💨 **Parallel Closing Animations**: Vastly improved UX by running reverse animations concurrently, eliminating input lag when dismissing the menu.
+- 🧊 **Native Sub-menu Panning**: Sub-menus now smoothly pan horizontally with dynamic height resizing via `AnimatedSize` and `SlideTransition`, accurately replicating the native iOS feel.
+- 📐 **GlobalKey Precision**: Refactored `ContextMenuWrapper` to a `StatefulWidget` using a `GlobalKey`, completely eliminating padding/margin misalignment errors during the "Pop" preview phase.
+- 📏 **Standardized iOS Sizing**: Removed dynamic responsive stretching in favor of strict `BoxConstraints(maxWidth: 250)` to maintain compact, realistic iOS dimensions even on large Android tablets.
+- 🛡️ **Memory Leak Protection**: Implemented strict interaction blocking (`_isClosing` flag) to prevent rapid "double pop" bugs that could dismiss the underlying user screen.
+- 🧹 **Public Export Cleanliness**: Optimized the main barrel file (`lib/context_menu_android.dart`) to exclusively export `ContextMenuItem` and `ContextMenuWrapper`, protecting internal engine state.
+- 🎨 **Revamped Example App**: The `example` project has been completely overhauled into a stunning interactive showcase featuring deeply nested menus, circular clipping, and custom gradients.
+
 ## [1.1.0] - 2025-01-21
 
 ### 🚀 Modern iOS 17+ Evolution
