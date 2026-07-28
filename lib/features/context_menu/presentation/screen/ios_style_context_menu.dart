@@ -24,6 +24,10 @@ class IosStyleContextMenu extends StatefulWidget {
   final double? iconSize;
   final double? blurSigma;
   final Rect childRect;
+  final IconPosition iconPosition;
+  final Duration? openDuration;
+  final Duration? closeDuration;
+  final WidgetBuilder? previewBuilder;
 
   const IosStyleContextMenu({
     super.key,
@@ -42,6 +46,10 @@ class IosStyleContextMenu extends StatefulWidget {
     this.textSize,
     this.iconSize,
     this.blurSigma,
+    this.iconPosition = IconPosition.trailing,
+    this.openDuration,
+    this.closeDuration,
+    this.previewBuilder,
   });
 
   @override
@@ -56,6 +64,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   late List<Animation<double>> actionAnimations;
   late List<List<ContextMenuItem>> menuStack;
   bool _isClosing = false;
+  bool _isPoppingSubmenu = false;
 
   @override
   void initState() {
@@ -82,7 +91,9 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
 
   void _initChildAnimation() {
     childController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: widget.openDuration ?? const Duration(milliseconds: 300),
+      reverseDuration:
+          widget.closeDuration ?? const Duration(milliseconds: 300),
       vsync: this,
     );
 
@@ -93,9 +104,13 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   }
 
   void _initMenuAnimation() {
+    final defaultDuration = Duration(
+      milliseconds: min(600, 80 * menuStack.last.length),
+    );
     menuController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: min(600, 80 * menuStack.last.length)),
+      duration: widget.openDuration ?? defaultDuration,
+      reverseDuration: widget.closeDuration ?? defaultDuration,
     );
 
     actionAnimations = List.generate(menuStack.last.length, (index) {
@@ -108,9 +123,8 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     });
   }
 
-  void _startAnimations() async {
-    await HapticFeedbackHelper.triggerMedium();
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+  void _startAnimations() {
+    HapticFeedbackHelper.triggerMedium();
     if (!mounted) return;
     childController.forward();
     menuController.forward();
@@ -119,6 +133,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
   void _openSubMenu(List<ContextMenuItem> subMenu) {
     HapticFeedbackHelper.triggerLight();
     setState(() {
+      _isPoppingSubmenu = false;
       menuStack.add(subMenu);
       _initMenuAnimation();
       menuController.forward(from: 0);
@@ -129,6 +144,7 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     HapticFeedbackHelper.triggerLight();
     if (menuStack.length > 1) {
       setState(() {
+        _isPoppingSubmenu = true;
         menuStack.removeLast();
         _initMenuAnimation();
         menuController.forward(from: 0);
@@ -154,61 +170,74 @@ class _IosStyleContextMenuState extends State<IosStyleContextMenu>
     final double spaceBelow = screenSize.height - widget.childRect.bottom;
     final bool showMenuBelow = spaceBelow > spaceAbove;
 
-    return GestureDetector(
-      onTap: () => _closeMenu(),
-      child: Material(
-        color: Colors.transparent,
-        child: Stack(
-          children: [
-            BlurBackground(
-              backgroundColor:
-                  widget.backgroundColor ??
-                  ColorsManager.getBlurOverlayColor(isDarkTheme),
-              blurSigma: widget.blurSigma,
-            ),
-            // The Child Preview
-            Positioned(
-              top: widget.childRect.top,
-              left: widget.childRect.left,
-              width: widget.childRect.width,
-              height: widget.childRect.height,
-              child: ContextMenuChild(
-                controller: childController,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        await _closeMenu();
+      },
+      child: GestureDetector(
+        onTap: () => _closeMenu(),
+        child: Material(
+          color: Colors.transparent,
+          child: Stack(
+            children: [
+              FadeTransition(
                 opacity: childOpacity,
-                child: ClipRRect(
-                  borderRadius: widget.childBorderRadius ?? BorderRadius.zero,
-                  child: widget.child,
+                child: BlurBackground(
+                  backgroundColor:
+                      widget.backgroundColor ??
+                      ColorsManager.getBlurOverlayColor(isDarkTheme),
+                  blurSigma: widget.blurSigma,
                 ),
               ),
-            ),
-            // The Menu Panel
-            Positioned(
-              top: showMenuBelow ? widget.childRect.bottom + 12 : null,
-              bottom: showMenuBelow
-                  ? null
-                  : (screenSize.height - widget.childRect.top) + 12,
-              left: 16,
-              right: 16,
-              child: FadeTransition(
-                opacity: childOpacity,
-                child: Align(
-                  alignment: widget.menuAlignment ?? Alignment.center,
-                  child: ContextMenuPanel(
-                    widget: widget,
-                    menu: menuStack.last,
-                    animations: actionAnimations,
-                    hasBack: menuStack.length > 1,
-                    onBack: _closeSubMenu,
-                    onOpenSubMenu: _openSubMenu,
-                    onClose: _closeMenu,
-                    backgroundMenuColor:
-                        widget.backgroundMenuColor ??
-                        ColorsManager.getMenuBackgroundColor(isDarkTheme),
+              // The Child Preview
+              Positioned(
+                top: widget.childRect.top,
+                left: widget.childRect.left,
+                width: widget.childRect.width,
+                height: widget.childRect.height,
+                child: ContextMenuChild(
+                  controller: childController,
+                  opacity: childOpacity,
+                  child: ClipRRect(
+                    borderRadius: widget.childBorderRadius ?? BorderRadius.zero,
+                    child: widget.previewBuilder != null
+                        ? widget.previewBuilder!(context)
+                        : widget.child,
                   ),
                 ),
               ),
-            ),
-          ],
+              // The Menu Panel
+              Positioned(
+                top: showMenuBelow ? widget.childRect.bottom + 12 : null,
+                bottom: showMenuBelow
+                    ? null
+                    : (screenSize.height - widget.childRect.top) + 12,
+                left: 16,
+                right: 16,
+                child: FadeTransition(
+                  opacity: childOpacity,
+                  child: Align(
+                    alignment: widget.menuAlignment ?? Alignment.center,
+                    child: ContextMenuPanel(
+                      widget: widget,
+                      menu: menuStack.last,
+                      animations: actionAnimations,
+                      hasBack: menuStack.length > 1,
+                      isPoppingSubmenu: _isPoppingSubmenu,
+                      onBack: _closeSubMenu,
+                      onOpenSubMenu: _openSubMenu,
+                      onClose: _closeMenu,
+                      backgroundMenuColor:
+                          widget.backgroundMenuColor ??
+                          ColorsManager.getMenuBackgroundColor(isDarkTheme),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

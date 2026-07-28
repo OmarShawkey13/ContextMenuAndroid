@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+/// Defines the position of the icon relative to the label in a context menu item.
+enum IconPosition {
+  /// The icon is placed before the label (on the left in LTR layouts).
+  leading,
+
+  /// The icon is placed after the label (on the right in LTR layouts).
+  trailing,
+}
+
 /// Represents an action in the context menu.
 ///
 /// Each action contains an icon, a label, and a callback function
@@ -40,6 +49,5 @@ class ContextMenuItem {
 
   bool get hasSubMenu => subMenu != null && subMenu!.isNotEmpty;
 
-  bool get effectiveIsDestructive =>
-      isDestructive ?? label.toLowerCase().contains('delete');
+  bool get effectiveIsDestructive => isDestructive ?? false;
 }

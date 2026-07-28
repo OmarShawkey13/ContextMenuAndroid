@@ -280,6 +280,141 @@ class ContextMenuDemo extends StatelessWidget {
                 ),
               ),
             ),
+
+            const SizedBox(height: 48),
+
+            /// 🚀 Example 4: Customized Theme & Timings
+            _SectionTitle('Customized Theme & Timings'),
+            ContextMenuWrapper(
+              isDark: true, // Force dark mode
+              backgroundMenuColor: Colors.deepPurple.shade900.withValues(
+                alpha: 0.8,
+              ),
+              backgroundColor: Colors.black.withValues(alpha: 0.6),
+              dividerColor: Colors.white24,
+              iconColor: Colors.amber,
+              textStyle: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'monospace',
+              ),
+              openDuration: const Duration(
+                milliseconds: 800,
+              ), // Very slow for demo
+              closeDuration: const Duration(milliseconds: 600),
+              actions: [
+                ContextMenuItem(
+                  icon: Icons.dark_mode,
+                  label: 'Force Dark Mode',
+                  onTap: () {},
+                ),
+                ContextMenuItem(
+                  icon: Icons.timer,
+                  label: 'Slow Animation',
+                  onTap: () {},
+                ),
+              ],
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Custom Themed Menu',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 48),
+
+            /// 🚀 Example 5: Leading Icons & Custom Alignment
+            _SectionTitle('Leading Icons & Custom Alignment'),
+            ContextMenuWrapper(
+              iconPosition: IconPosition.leading, // Icons on the left
+              menuAlignment: Alignment.topRight, // Open from top right
+              textSize: 20, // Larger text
+              iconSize: 28, // Larger icons
+              actions: [
+                ContextMenuItem(
+                  icon: Icons.format_align_left,
+                  label: 'Leading Icon',
+                  onTap: () {},
+                ),
+                ContextMenuItem(
+                  icon: Icons.text_fields,
+                  label: 'Large Text',
+                  onTap: () {},
+                ),
+                ContextMenuItem(
+                  icon: Icons.settings,
+                  label: 'Sub Menu',
+                  subMenu: [
+                    ContextMenuItem(
+                      icon: Icons.wifi,
+                      label: 'Network',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ],
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                color: Colors.teal,
+                child: const Center(
+                  child: Text(
+                    'Right-Aligned Leading Icons',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 48),
+
+            /// 🚀 Example 6: Heavy Blur & Desktop Right-Click
+            _SectionTitle('Heavy Blur & Desktop Ready'),
+            ContextMenuWrapper(
+              blurSigma: 20.0, // Intense blur
+              actions: [
+                ContextMenuItem(
+                  icon: Icons.mouse,
+                  label: 'Right-Click (Web/Desktop)',
+                  onTap: () {},
+                ),
+                ContextMenuItem(
+                  icon: Icons.blur_on,
+                  label: 'Intense Blur Sigma',
+                  onTap: () {},
+                ),
+              ],
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Long Press or Right Click',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 48),
           ],
         ),
       ),

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.0] - 2026-07-28
+
+### 🚀 Major Improvements & Fixes
+
+- ⚡️ **Zero-Lag Smooth Animations**: Removed an internal 50ms artificial delay and synced the blur background to the `FadeTransition`. This eliminates the "flash" effect, ensuring an instantly responsive and buttery smooth opening transition.
+- 🎯 **Android Back Button Fix**: Prevented the menu from instantly dismissing when pressing the hardware back button, ensuring reverse animations always play by utilizing `PopScope`.
+- 🔄 **True iOS Submenu Navigation**: Fixed a critical animation flaw where navigating "Back" out of a submenu would slide the wrong way. Submenus now correctly slide from Right-to-Left when opening, and Left-to-Right when closing!
+- 🎨 **Morphing Previews (`previewBuilder`)**: You can now pass a `previewBuilder` to completely replace the previewed widget. (e.g. Long-press a small thumbnail and have the preview morph into a high-res image or a rich-link preview).
+- 🖱️ **Desktop/Web Right-Click Support**: Added `onSecondaryTapDown` to seamlessly support right-click context menus on macOS, Windows, Linux, and Web.
+- 📐 **Icon Position Control**: Added `iconPosition` property allowing icons to be placed either on the `leading` or `trailing` edge of the action labels.
+- ⏱️ **Custom Animation Durations**: Developers can now explicitly set `openDuration` and `closeDuration` via `ContextMenuWrapper` to precisely control animation speeds.
+- 🌍 **Localization Fix**: Removed English-only hardcoded `"delete"` detection for destructive actions. `isDestructive` must now be explicitly set, preventing false negatives/positives in other languages.
+- ♿️ **Accessibility Upgrade**: Wrapped the trigger widget with `Semantics(onLongPressHint: 'Open context menu')` for better screen reader support.
+- 🧹 **Code Cleanup**: Removed unused `responsive_size.dart` utilities and restored widget testing.
+
 ## [1.2.0] - 2026-06-10
 
 ### 🚀 Elite Architectural & UX Improvements

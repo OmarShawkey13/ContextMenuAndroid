@@ -57,6 +57,14 @@ class ContextMenuActionTile extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Row(
                 children: [
+                  if (widget.iconPosition == IconPosition.leading) ...[
+                    Icon(
+                      action.icon,
+                      color: contentColor,
+                      size: widget.iconSize ?? 22,
+                    ),
+                    const SizedBox(width: 12),
+                  ],
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,12 +92,15 @@ class ContextMenuActionTile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Icon(
-                    action.hasSubMenu ? Icons.chevron_right : action.icon,
-                    color: contentColor,
-                    size: widget.iconSize ?? 22,
-                  ),
+                  if (widget.iconPosition == IconPosition.trailing ||
+                      action.hasSubMenu) ...[
+                    const SizedBox(width: 12),
+                    Icon(
+                      action.hasSubMenu ? Icons.chevron_right : action.icon,
+                      color: contentColor,
+                      size: widget.iconSize ?? 22,
+                    ),
+                  ],
                 ],
               ),
             ),

@@ -11,7 +11,7 @@ Perfect for creating beautiful **long-press menus** on any widget, such as cards
 
 ---
 
-## ✨ Features (v1.2.0)
+## ✨ Features (v1.3.0)
 
 | Feature                        | Description                                                                           |
 |--------------------------------|---------------------------------------------------------------------------------------|
@@ -35,7 +35,7 @@ Add to your project's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  context_menu_android: ^1.2.0
+  context_menu_android: ^1.3.0
 ```
 
 Import it in your code:
@@ -132,6 +132,10 @@ ContextMenuWrapper(
 | `iconColor`           | `Color?`                | Default color for icons.                                              |
 | `textStyle`           | `TextStyle?`            | Custom text style for action labels.                                  |
 | `menuAlignment`       | `AlignmentGeometry?`    | Alignment of the menu relative to the child (Start/Center/End)        |
+| `iconPosition`        | `IconPosition`          | Position of the icon relative to the label (leading or trailing).     |
+| `openDuration`        | `Duration?`             | Custom duration for the opening animation.                            |
+| `closeDuration`       | `Duration?`             | Custom duration for the closing animation.                            |
+| `previewBuilder`      | `WidgetBuilder?`        | Builder to show a completely custom widget in the preview.            |
 
 ### `ContextMenuItem`
 
@@ -142,7 +146,7 @@ ContextMenuWrapper(
 | `subtitle`      | `String?`                | Optional secondary text below the label.                  |
 | `onTap`         | `VoidCallback?`          | Function executed when the action is tapped.              |
 | `subMenu`       | `List<ContextMenuItem>?` | Optional list of items for a nested menu.                 |
-| `isDestructive` | `bool?`                  | If true, colors the item red. Auto-detected for "Delete". |
+| `isDestructive` | `bool`                   | If true, colors the item red. Default is false.           |
 | `enabled`       | `bool`                   | If false, the item is greyed out and non-interactive.     |
 
 ---
@@ -163,8 +167,6 @@ lib/
         └── presentation/
             ├── screen/
             │   └── ios_style_context_menu.dart # Main overlay widget
-            ├── utils/
-            │   └── responsive_size.dart        # Sizing utilities
             └── widget/
                 ├── context_menu_wrapper.dart   # Easy integration widget
                 ├── context_menu_panel.dart     # Menu container

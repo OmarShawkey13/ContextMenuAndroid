@@ -47,6 +47,18 @@ class ContextMenuWrapper extends StatefulWidget {
   /// Optional: Intensity of the blur.
   final double? blurSigma;
 
+  /// Optional: Position of the icon (leading or trailing). Defaults to trailing.
+  final IconPosition iconPosition;
+
+  /// Optional: Custom animation duration for opening.
+  final Duration? openDuration;
+
+  /// Optional: Custom animation duration for closing.
+  final Duration? closeDuration;
+
+  /// Optional: A builder to construct a custom preview widget instead of just scaling the child.
+  final WidgetBuilder? previewBuilder;
+
   const ContextMenuWrapper({
     super.key,
     required this.child,
@@ -63,6 +75,10 @@ class ContextMenuWrapper extends StatefulWidget {
     this.textSize,
     this.iconSize,
     this.blurSigma,
+    this.iconPosition = IconPosition.trailing,
+    this.openDuration,
+    this.closeDuration,
+    this.previewBuilder,
   });
 
   @override
@@ -98,6 +114,10 @@ class _ContextMenuWrapperState extends State<ContextMenuWrapper> {
         textSize: widget.textSize,
         iconSize: widget.iconSize,
         blurSigma: widget.blurSigma,
+        iconPosition: widget.iconPosition,
+        openDuration: widget.openDuration,
+        closeDuration: widget.closeDuration,
+        previewBuilder: widget.previewBuilder,
         child: widget.child,
       ),
     );
@@ -105,9 +125,13 @@ class _ContextMenuWrapperState extends State<ContextMenuWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onLongPress: () => _showMenu(context),
-      child: KeyedSubtree(key: _childKey, child: widget.child),
+    return Semantics(
+      onLongPressHint: 'Open context menu',
+      child: GestureDetector(
+        onLongPress: () => _showMenu(context),
+        onSecondaryTapDown: (_) => _showMenu(context),
+        child: KeyedSubtree(key: _childKey, child: widget.child),
+      ),
     );
   }
 }

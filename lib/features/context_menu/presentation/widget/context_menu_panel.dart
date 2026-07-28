@@ -12,6 +12,7 @@ class ContextMenuPanel extends StatelessWidget {
   final List<Animation<double>> animations;
   final Color? backgroundMenuColor;
   final bool hasBack;
+  final bool isPoppingSubmenu;
   final VoidCallback onBack;
   final void Function(List<ContextMenuItem>) onOpenSubMenu;
   final void Function([VoidCallback? action]) onClose;
@@ -23,6 +24,7 @@ class ContextMenuPanel extends StatelessWidget {
     required this.animations,
     required this.backgroundMenuColor,
     required this.hasBack,
+    required this.isPoppingSubmenu,
     required this.onBack,
     required this.onOpenSubMenu,
     required this.onClose,
@@ -64,20 +66,27 @@ class ContextMenuPanel extends StatelessWidget {
               switchInCurve: Curves.easeOutCubic,
               switchOutCurve: Curves.easeOutCubic,
               transitionBuilder: (Widget child, Animation<double> animation) {
-                final bool isPushing =
+                final bool isIncoming =
                     child.key == ValueKey<int>(menu.hashCode);
-                final Tween<Offset> slideTween = isPushing
-                    ? Tween<Offset>(
-                        begin: const Offset(1.0, 0.0),
-                        end: Offset.zero,
-                      )
-                    : Tween<Offset>(
-                        begin: const Offset(-1.0, 0.0),
-                        end: Offset.zero,
-                      );
+
+                Offset beginOffset;
+                if (isPoppingSubmenu) {
+                  // Going back: Incoming comes from left (-1), outgoing goes right (1)
+                  beginOffset = isIncoming
+                      ? const Offset(-1.0, 0.0)
+                      : const Offset(1.0, 0.0);
+                } else {
+                  // Going forward: Incoming comes from right (1), outgoing goes left (-1)
+                  beginOffset = isIncoming
+                      ? const Offset(1.0, 0.0)
+                      : const Offset(-1.0, 0.0);
+                }
 
                 return SlideTransition(
-                  position: slideTween.animate(animation),
+                  position: Tween<Offset>(
+                    begin: beginOffset,
+                    end: Offset.zero,
+                  ).animate(animation),
                   child: FadeTransition(opacity: animation, child: child),
                 );
               },
